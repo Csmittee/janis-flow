@@ -3,69 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janis Flow - Test</title>
+    <title>Janis Flow · Let's flow!</title>
     
-    <!-- ===== YOUR INJECTOR ===== -->
-   
-    <script src="https://cdn.jsdelivr.net/gh/csmittee/janishammer-central/js/injector.js"></script>    <!-- SEO & META -->
-    
-    
-    <meta name="description" content="Premium skateboards and surfskates">
+    <!-- META TAGS (injector won't add these) -->
+    <meta name="description" content="We proudly present Brand X skateboard deck from USA and Outride surfskate from Italy -- Its value grow over time!">
+    <meta property="og:title" content="Janis Flow">
+    <meta property="og:description" content="Lets flow with us">
     <meta property="og:image" content="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773341421/Eng_SEO_OG.png">
+    <meta property="og:url" content="https://flow.janishammer.com">
+    
+    <!-- ✅ INJECTOR FROM CENTRAL REPO VIA CDN -->
+    <script src="https://cdn.jsdelivr.net/gh/csmittee/janishammer-central/js/injector.js"></script>
+    
+    <!-- Page-specific styles -->
+    <style>
+        /* Hero specific positioning */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .hero-logo {
+            max-width: 400px;
+            width: 100%;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 2px 4px 8px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            color: white;
+            text-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        /* Product cards */
+        .products-section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .product-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #D4E157, #AED581);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: #33691E;
+        }
+        
+        .product-title {
+            font-size: 1.5rem;
+            color: #33691E;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .product-desc {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #D4E157;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-button {
+            background: #D4E157;
+            color: #33691E;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .product-button:hover {
+            background: #33691E;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .section-title { font-size: 2rem; }
+            .product-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-container">
-            <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png" 
-                 alt="Janis Flow" 
-                 class="hero-logo">
-            <h1>Let's flow!</h1>
-            <p>Premium board sports from USA and Italy</p>
-        </div>
-    </section>
+    <!-- 
+        INJECTOR WILL ADD:
+        - Navbar with dropdown
+        - Language selector
+        - Footer
+        - All base styles
+        - Background image
+        - Fonts
+        - Font Awesome
+        - Mobile menu
+        - Google Analytics
+    -->
     
-    <!-- Product Cards -->
-    <main class="content">
-        <h2 class="section-title">Featured Products</h2>
+    <!-- HERO SECTION (your content) -->
+    <section class="hero">
+        <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png" 
+             alt="Janis Flow" 
+             class="hero-logo">
+        <h1>Lets flow with us</h1>
+        <p>We proudly present Brand X skateboard deck from USA<br>and Outride surfskate from Italy — value grows over time!</p>
+    </section>
+
+    <!-- PRODUCTS SECTION (your content) -->
+    <section class="products-section">
+        <h2 class="section-title">Our Flow Collection</h2>
+        
         <div class="product-grid">
             <div class="product-card">
-                <div class="product-icon"><i class="fas fa-skateboard"></i></div>
-                <h3 class="product-title">Flow Pro Board</h3>
-                <button class="product-button">Ride Now</button>
+                <div class="product-icon">🛹</div>
+                <h3 class="product-title">Brand X Skateboard</h3>
+                <p class="product-desc">Premium maple deck from USA · 7-ply construction</p>
+                <div class="product-price">฿3,900</div>
+                <button class="product-button">Shop Now</button>
             </div>
+            
             <div class="product-card">
-                <div class="product-icon"><i class="fas fa-water"></i></div>
-                <h3 class="product-title">Surfskate Wave</h3>
-                <button class="product-button">Catch Wave</button>
+                <div class="product-icon">🏄</div>
+                <h3 class="product-title">Outride Surfskate</h3>
+                <p class="product-desc">Italian design · Carving system · Smooth like waves</p>
+                <div class="product-price">฿5,900</div>
+                <button class="product-button">Shop Now</button>
             </div>
+            
             <div class="product-card">
-                <div class="product-icon"><i class="fas fa-cubes"></i></div>
-                <h3 class="product-title">Accessories</h3>
-                <button class="product-button">Explore</button>
+                <div class="product-icon">⚡</div>
+                <h3 class="product-title">Flow Complete</h3>
+                <p class="product-desc">Deck + trucks + wheels · Ready to ride</p>
+                <div class="product-price">฿8,900</div>
+                <button class="product-button">Shop Now</button>
             </div>
         </div>
-    </main>
-    
-    <!-- Test Script - UPDATED with longer timeout -->
-    <script>
-        console.log('🔍 Testing injector...');
-        setTimeout(() => {
-            if (document.querySelector('.navbar')) {
-                console.log('✅ SUCCESS! Injector loaded!');
-                console.log('🎨 Brand:', document.querySelector('.navbar') ? 'Navbar present' : 'Missing');
-            } else {
-                console.log('⏳ Still waiting for injector...');
-                // Check again after 2 more seconds
-                setTimeout(() => {
-                    if (document.querySelector('.navbar')) {
-                        console.log('✅ SUCCESS on second check!');
-                    } else {
-                        console.log('❌ Injector failed to load - check network tab for 404');
-                    }
-                }, 2000);
-            }
-        }, 1500); // Increased timeout
-    </script>
+    </section>
+
+    <!-- BLOG TEASER -->
+    <section class="products-section" style="padding-top: 0;">
+        <h2 class="section-title">Flow Stories</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <h3 class="product-title">How to choose your first surfskate</h3>
+                <p class="product-desc">Tips from our team riders</p>
+                <a href="#" class="product-button">Read More</a>
+            </div>
+            <div class="product-card">
+                <h3 class="product-title">The value of Italian design</h3>
+                <p class="product-desc">Why Outride stands out</p>
+                <a href="#" class="product-button">Read More</a>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
