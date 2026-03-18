@@ -3,91 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janis Flow - Real Test</title>
+    <title>Janis Flow - Test</title>
     
-    <!-- SEO & META (STAYS IN INDEX) -->
-    <meta name="description" content="Premium skateboards and surfskates from USA and Italy">
+    <!-- ===== YOUR INJECTOR ===== -->
+    <script src="https://raw.githubusercontent.com/csmittee/js/refs/heads/main/injector.js"></script>
+    
+    <!-- SEO & META -->
+    <meta name="description" content="Premium skateboards and surfskates">
     <meta property="og:image" content="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773341421/Eng_SEO_OG.png">
-    
-    <!-- JSON-LD (STAYS IN INDEX) -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Store",
-        "name": "Janis Flow"
-    }
-    </script>
-    
-<script src="https://raw.githubusercontent.com/csmittee/js/refs/heads/main/injector.js"></script>   
-    
 </head>
 <body>
-    <!-- ===== PAGE CONTENT ONLY - NO INLINE STYLES ===== -->
-    <!-- injector.js provides ALL styling via CSS classes -->
-    
-    <!-- Hero Section - CONTENT only, no inline styles -->
+    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-container">
             <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png" 
                  alt="Janis Flow" 
-                 class="hero-logo">  <!-- Class, not inline style -->
-            <h1>Let's flow!</h1>  <!-- Styled by injector.css -->
-            <p>We proudly present Brand X skateboard deck from USA and Outride surfskate from Italy</p>
+                 class="hero-logo">
+            <h1>Let's flow!</h1>
+            <p>Premium board sports from USA and Italy</p>
         </div>
     </section>
     
-    <!-- Product Cards - CONTENT only -->
+    <!-- Product Cards -->
     <main class="content">
         <h2 class="section-title">Featured Products</h2>
         <div class="product-grid">
-            <!-- Card 1 - uses CSS classes only -->
             <div class="product-card">
-                <div class="product-icon">
-                    <i class="fas fa-skateboard"></i>
-                </div>
+                <div class="product-icon"><i class="fas fa-skateboard"></i></div>
                 <h3 class="product-title">Flow Pro Board</h3>
-                <p class="product-description">Professional skateboard deck with premium grip</p>
-                <div class="product-price">฿3,900</div>
                 <button class="product-button">Ride Now</button>
             </div>
-            
-            <!-- Card 2 -->
             <div class="product-card">
-                <div class="product-icon">
-                    <i class="fas fa-water"></i>
-                </div>
+                <div class="product-icon"><i class="fas fa-water"></i></div>
                 <h3 class="product-title">Surfskate Wave</h3>
-                <p class="product-description">Italian-designed surfskate that mimics ocean waves</p>
-                <div class="product-price">฿6,500</div>
                 <button class="product-button">Catch Wave</button>
             </div>
-            
-            <!-- Card 3 -->
             <div class="product-card">
-                <div class="product-icon">
-                    <i class="fas fa-cubes"></i>
-                </div>
-                <h3 class="product-title">Flow Accessories</h3>
-                <p class="product-description">Premium wheels, bearings, and grip tape</p>
-                <div class="product-price">฿1,200+</div>
+                <div class="product-icon"><i class="fas fa-cubes"></i></div>
+                <h3 class="product-title">Accessories</h3>
                 <button class="product-button">Explore</button>
             </div>
         </div>
     </main>
     
-    <!-- NO FOOTER HERE - injector.js adds it -->
-    
-    <!-- Test script to verify injector loaded -->
+    <!-- Test Script - UPDATED with longer timeout -->
     <script>
         console.log('🔍 Testing injector...');
         setTimeout(() => {
             if (document.querySelector('.navbar')) {
-                console.log('✅ SUCCESS! Injector loaded navbar and styles!');
-                console.log('🎨 Brand colors should be applied');
+                console.log('✅ SUCCESS! Injector loaded!');
+                console.log('🎨 Brand:', document.querySelector('.navbar') ? 'Navbar present' : 'Missing');
             } else {
-                console.log('❌ Injector not loaded - add script tag with real URL');
+                console.log('⏳ Still waiting for injector...');
+                // Check again after 2 more seconds
+                setTimeout(() => {
+                    if (document.querySelector('.navbar')) {
+                        console.log('✅ SUCCESS on second check!');
+                    } else {
+                        console.log('❌ Injector failed to load - check network tab for 404');
+                    }
+                }, 2000);
             }
-        }, 1000);
+        }, 1500); // Increased timeout
     </script>
 </body>
 </html>
