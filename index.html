@@ -17,6 +17,11 @@
     <script src="https://assets.janishammer.com/js/injector-config.js"></script>
     
     <style>
+        /* Force content visibility above injector background */
+        body {
+            background: transparent !important;
+        }
+        
         /* ===== PAGE-SPECIFIC STYLES ===== */
         
         /* Hero Section */
@@ -29,6 +34,7 @@
             text-align: center;
             padding: 4rem 2rem;
             position: relative;
+            background: transparent;
         }
         
         .hero-logo {
@@ -67,11 +73,13 @@
             max-width: 1280px;
             margin: 0 auto;
             padding: 2rem;
+            position: relative;
+            z-index: 10;
         }
         
-        /* Search Section - Improved Hierarchy */
+        /* Search Section */
         .search-section {
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.6);
             backdrop-filter: blur(10px);
             border-radius: 32px;
             padding: 2rem;
@@ -240,6 +248,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .product-card:hover {
@@ -275,20 +284,21 @@
         
         .product-category {
             display: inline-block;
-            background: rgba(212,225,87,0.2);
+            background: rgba(212,225,87,0.3);
             color: #33691E;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             align-self: flex-start;
         }
         
         .product-brand {
             font-size: 0.85rem;
-            color: #999;
+            color: #888;
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
         
         .product-price {
@@ -343,6 +353,7 @@
             font-size: 0.75rem;
             font-weight: 600;
             backdrop-filter: blur(5px);
+            z-index: 5;
         }
         
         .stock-badge.low {
@@ -359,11 +370,13 @@
             color: white;
             padding: 4rem;
             font-size: 1.2rem;
+            background: rgba(0,0,0,0.5);
+            border-radius: 24px;
         }
         
-        /* CTA Section - 2 Column Grid */
+        /* CTA Section */
         .cta-section {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             backdrop-filter: blur(20px);
             border-radius: 48px;
             padding: 4rem 2rem;
@@ -470,13 +483,14 @@
             cursor: pointer;
             font-weight: bold;
             transition: color 0.3s;
+            z-index: 10002;
         }
         
         .lightbox-close:hover {
             color: #D4E157;
         }
         
-        /* Modal for Product Details */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -587,6 +601,9 @@
                 font-size: 0.8rem;
                 padding: 0.5rem 1rem;
             }
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -645,13 +662,11 @@
             </div>
         </div>
         
-        <!-- PRODUCT GRID (Dynamic) -->
-        <div id="product-grid" class="product-grid">
-            <!-- Products will be injected here -->
-        </div>
+        <!-- PRODUCT GRID -->
+        <div id="product-grid" class="product-grid"></div>
     </div>
     
-    <!-- CTA SECTION - 2 Column Grid -->
+    <!-- CTA SECTION -->
     <div class="container">
         <div class="cta-section">
             <h1>📸 These are our catalogs for our available stocks</h1>
@@ -675,7 +690,7 @@
     
     <!-- LIGHTBOX -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="lightbox-close">&times;</span>
+        <span class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();">&times;</span>
         <img class="lightbox-img" id="lightboxImg">
     </div>
     
@@ -688,7 +703,7 @@
     </div>
 
     <script>
-        // ===== SAMPLE PRODUCT DATA (All Skateboard Decks) =====
+        // ===== PRODUCT DATA =====
         const products = [
             {
                 id: 1,
@@ -739,8 +754,6 @@
                 stock_status: "In Stock"
             }
         ];
-        
-        let currentProducts = [...products];
         
         // Lightbox functions
         function openLightbox(imageUrl) {
@@ -821,8 +834,8 @@
                     </div>
                     <div class="modal-info">
                         <h2>${product.name}</h2>
-                        <div class="product-category">${product.category} | ${product.brand}</div>
-                        <div class="modal-price">${product.price.toLocaleString()}</div>
+                        <div class="product-category" style="display: inline-block; margin-bottom: 0.5rem;">${product.category} | ${product.brand}</div>
+                        <div class="modal-price">฿${product.price.toLocaleString()}</div>
                         <p>${product.full_description}</p>
                         
                         ${colorsArray.length ? `
@@ -906,4 +919,22 @@
             maxInput.value = 10000;
             slider.value = 10000;
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.cat-btn[data-cat="all"]').classList.add
+            document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
+            document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.brand-btn[data-brand="all"]').classList.add('active');
+            renderProducts();
+        });
+        
+        // Modal close
+        const modal = document.getElementById('product-modal');
+        document.querySelector('.modal-close').onclick = () => modal.style.display = 'none';
+        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        
+        // Initial render
+        renderProducts();
+        
+        // Make openLightbox globally available
+        window.openLightbox = openLightbox;
+    </script>
+</body>
+</html>
