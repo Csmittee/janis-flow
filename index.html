@@ -12,17 +12,84 @@
     <meta property="og:image" content="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773341421/Eng_SEO_OG.png">
     <meta property="og:url" content="https://flow.janishammer.com">
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- INJECTOR SCRIPTS (FIXED - DO NOT MODIFY) -->
     <script src="https://assets.janishammer.com/js/injector-core.js"></script>
     <script src="https://assets.janishammer.com/js/injector-config.js"></script>
     
     <style>
-        /* Force content visibility above injector background */
+        /* Force content visibility */
         body {
             background: transparent !important;
+            font-family: 'Inter', sans-serif;
         }
         
-        /* ===== PAGE-SPECIFIC STYLES ===== */
+        /* Floating Cart Button - Independent from navbar */
+        .cart-floating {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #D4E157, #AED581);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .cart-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .cart-floating i {
+            font-size: 1.5rem;
+            color: #33691E;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #F44336;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        /* Alternative Cart Button (for mobile menu) - subtle, non-intrusive */
+        .cart-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background: rgba(212,225,87,0.2);
+            border-radius: 40px;
+            transition: all 0.3s;
+        }
+        
+        .cart-nav-link:hover {
+            background: rgba(212,225,87,0.4);
+        }
         
         /* Hero Section */
         .hero {
@@ -448,6 +515,172 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.3);
         }
         
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cart-modal.active {
+            display: flex;
+        }
+        
+        .cart-content {
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #D4E157, #AED581);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-header h2 {
+            color: #33691E;
+            font-size: 1.3rem;
+        }
+        
+        .cart-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #33691E;
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .cart-item-image {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 700;
+            color: #33691E;
+            margin-bottom: 0.25rem;
+        }
+        
+        .cart-item-variant {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        
+        .cart-item-price {
+            color: #D4E157;
+            font-weight: 700;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .cart-qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: #f0f0f0;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cart-item-qty {
+            width: 40px;
+            text-align: center;
+        }
+        
+        .cart-item-remove {
+            color: #F44336;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .cart-summary {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-quotation {
+            width: 100%;
+            background: linear-gradient(135deg, #D4E157, #AED581);
+            color: #33691E;
+            border: none;
+            padding: 1rem;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-quotation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212,225,87,0.3);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            z-index: 10002;
+            transition: transform 0.3s;
+            white-space: nowrap;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
         /* Lightbox */
         .lightbox {
             display: none;
@@ -457,10 +690,9 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.95);
-            z-index: 10001;
+            z-index: 10000;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
         }
         
         .lightbox.active {
@@ -471,7 +703,6 @@
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
-            border-radius: 8px;
         }
         
         .lightbox-close {
@@ -481,116 +712,12 @@
             color: white;
             font-size: 40px;
             cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s;
-            z-index: 10002;
         }
         
-        .lightbox-close:hover {
-            color: #D4E157;
-        }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
-        }
-        
-        .modal-content {
-            max-width: 1200px;
-            margin: 2rem auto;
-            background: white;
-            border-radius: 32px;
-            padding: 2rem;
-            position: relative;
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.3s;
-        }
-        
-        .modal-close:hover {
-            color: #E34C26;
-        }
-        
-        .modal-product-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        
-        .modal-gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .modal-main-image {
-            width: 100%;
-            border-radius: 16px;
-            cursor: pointer;
-        }
-        
-        .modal-thumbnails {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-        }
-        
-        .modal-thumb {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: opacity 0.3s;
-        }
-        
-        .modal-thumb:hover {
-            opacity: 0.7;
-        }
-        
-        .modal-info h2 {
-            color: #33691E;
-            margin-bottom: 1rem;
-        }
-        
-        .modal-price {
-            font-size: 2rem;
-            color: #D4E157;
-            font-weight: 800;
-            margin: 1rem 0;
-        }
-        
-        .color-swatch {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin: 0.25rem;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
+        /* Responsive */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2rem; }
             .hero h2 { font-size: 1.2rem; }
-            .modal-product-details { grid-template-columns: 1fr; }
             .filter-group { flex-direction: column; }
             .image-stack { 
                 grid-template-columns: 1fr;
@@ -604,10 +731,22 @@
             .product-grid {
                 grid-template-columns: 1fr;
             }
+            .cart-floating {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Floating Cart Button (Independent from navbar) -->
+    <div class="cart-floating" id="cartFloating">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+    
     <!-- HERO SECTION -->
     <section class="hero">
         <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png" 
@@ -688,20 +827,58 @@
         </div>
     </div>
     
+    <!-- CART MODAL -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2><i class="fas fa-shopping-bag"></i> Your Cart</h2>
+                <span class="cart-close" onclick="closeCart()">&times;</span>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <div style="text-align: center; padding: 2rem; color: #888;">
+                    Your cart is empty
+                </div>
+            </div>
+            <div class="cart-summary">
+                <div class="cart-total">
+                    <span>Total</span>
+                    <span id="cartTotal">฿0</span>
+                </div>
+                <button class="btn-quotation" onclick="requestQuotation()">
+                    <i class="fas fa-file-invoice"></i> Get Your Quotation
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- QUOTATION MODAL -->
+    <div id="quotationModal" class="cart-modal">
+        <div class="cart-content" style="max-width: 500px;">
+            <div class="cart-header">
+                <h2><i class="fas fa-check-circle"></i> Quotation Request</h2>
+                <span class="cart-close" onclick="closeQuotationModal()">&times;</span>
+            </div>
+            <div style="padding: 2rem; text-align: center;">
+                <i class="fas fa-envelope" style="font-size: 3rem; color: #D4E157; margin-bottom: 1rem;"></i>
+                <h3 style="color: #33691E; margin-bottom: 0.5rem;">Thank You!</h3>
+                <p style="color: #666; margin-bottom: 1rem;">We've received your quotation request.</p>
+                <p style="color: #888; font-size: 0.9rem;">Our team will contact you within 24 hours with your quotation details.</p>
+                <button class="btn-quotation" style="margin-top: 1.5rem;" onclick="closeQuotationModal()">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <!-- LIGHTBOX -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();">&times;</span>
+        <span class="lightbox-close">&times;</span>
         <img class="lightbox-img" id="lightboxImg">
     </div>
     
-    <!-- PRODUCT MODAL -->
-    <div id="product-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+    
     <script>
         // ===== PRODUCT DATA =====
         const products = [
@@ -713,12 +890,15 @@
                 price: 6500,
                 main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
                 gallery_images: [
-                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png"
+                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
+                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/7bc405a44b6e4327110f39f6506fdb4a.png",
+                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg"
                 ],
-                colors: "Natural Wood:#D2B48C,Black:#000000",
-                options: "7.75\",8.0\",8.25\"",
+                colors: ["Natural Wood", "Black", "Green"],
+                colorHex: ["#D2B48C", "#000000", "#4CAF50"],
+                sizes: ["7.75\"", "8.0\"", "8.25\""],
                 full_description: "Premium skateboard deck featuring Josh Marlower's signature hammer head graphic. Made from 7-ply Canadian maple, pro-grade concave for optimal control and pop.",
-                feature_details: "7-ply Canadian maple,Pro-grade concave,Signature graphic,Durable construction",
+                feature_details: ["7-ply Canadian maple", "Pro-grade concave", "Signature graphic", "Durable construction"],
                 stock_status: "In Stock"
             },
             {
@@ -728,13 +908,12 @@
                 category: "Skateboard deck",
                 price: 5500,
                 main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg",
-                gallery_images: [
-                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg"
-                ],
-                colors: "Green:#4CAF50",
-                options: "8.0\"",
+                gallery_images: ["https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg"],
+                colors: ["Green"],
+                colorHex: ["#4CAF50"],
+                sizes: ["8.0\""],
                 full_description: "Brand X signature green deck. Made from premium maple with a vibrant green stain and professional-grade concave.",
-                feature_details: "Premium maple,Vibrant green finish,Pro concave,Durable",
+                feature_details: ["Premium maple", "Vibrant green finish", "Pro concave", "Durable"],
                 stock_status: "Low Stock"
             },
             {
@@ -744,197 +923,51 @@
                 category: "Skateboard deck",
                 price: 5900,
                 main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
-                gallery_images: [
-                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png"
-                ],
-                colors: "Black:#000000,White:#FFFFFF",
-                options: "7.75\",8.0\"",
+                gallery_images: ["https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png"],
+                colors: ["Black", "White"],
+                colorHex: ["#000000", "#FFFFFF"],
+                sizes: ["7.75\"", "8.0\""],
                 full_description: "Classic Brand X deck with pro-grade concave and durable construction. Perfect for street and park skating.",
-                feature_details: "Classic design,Pro concave,Durable maple,Street ready",
+                feature_details: ["Classic design", "Pro concave", "Durable maple", "Street ready"],
                 stock_status: "In Stock"
             }
         ];
         
-        // Lightbox functions
-        function openLightbox(imageUrl) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightboxImg');
-            lightboxImg.src = imageUrl;
-            lightbox.classList.add('active');
+        // Cart Data (shared across pages via localStorage)
+        let cart = JSON.parse(localStorage.getItem('flowCart')) || [];
+        
+        // Update cart UI
+        function updateCartUI() {
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').innerText = cartCount;
+            localStorage.setItem('flowCart', JSON.stringify(cart));
+            renderCartItems();
         }
         
-        function closeLightbox() {
-            const lightbox = document.getElementById('lightbox');
-            lightbox.classList.remove('active');
-        }
-        
-        // Render products
-        function renderProducts() {
-            const grid = document.getElementById('product-grid');
-            const minPrice = parseInt(document.getElementById('min-price').value) || 0;
-            const maxPrice = parseInt(document.getElementById('max-price').value) || 10000;
-            const activeCat = document.querySelector('.cat-btn.active').dataset.cat;
-            const activeBrand = document.querySelector('.brand-btn.active').dataset.brand;
+        // Render cart items
+        function renderCartItems() {
+            const container = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
             
-            const filtered = products.filter(p => {
-                const priceMatch = p.price >= minPrice && p.price <= maxPrice;
-                const catMatch = activeCat === 'all' || p.category === activeCat;
-                const brandMatch = activeBrand === 'all' || p.brand === activeBrand;
-                return priceMatch && catMatch && brandMatch;
-            });
+            if (!container) return;
             
-            if (filtered.length === 0) {
-                grid.innerHTML = '<div class="no-results">😢 No products found. Try adjusting your filters!</div>';
+            if (cart.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #888;">Your cart is empty</div>';
+                if (cartTotal) cartTotal.innerText = '฿0';
                 return;
             }
             
-            grid.innerHTML = filtered.map(p => `
-                <div class="product-card" onclick="openProductModal(${p.id})">
-                    <img src="${p.main_image}" alt="${p.name}" class="product-image">
-                    <div class="stock-badge ${p.stock_status === 'Low Stock' ? 'low' : p.stock_status === 'Out of Stock' ? 'out' : ''}">
-                        ${p.stock_status}
-                    </div>
-                    <div class="product-info">
-                        <div class="product-category">${p.category}</div>
-                        <div class="product-brand">${p.brand}</div>
-                        <h3 class="product-name">${p.name}</h3>
-                        <div class="product-price">${p.price.toLocaleString()}</div>
-                        <p class="product-desc">${p.full_description.substring(0, 80)}${p.full_description.length > 80 ? '...' : ''}</p>
-                        <button class="view-details">View Details →</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // Open product modal
-        function openProductModal(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-            
-            const modal = document.getElementById('product-modal');
-            const modalBody = document.getElementById('modal-body');
-            
-            const colorsArray = product.colors ? product.colors.split(',').map(c => {
-                const [name, hex] = c.split(':');
-                return { name, hex };
-            }) : [];
-            
-            const optionsArray = product.options ? product.options.split(',') : [];
-            const featuresArray = product.feature_details ? product.feature_details.split(',') : [];
-            
-            modalBody.innerHTML = `
-                <div class="modal-product-details">
-                    <div class="modal-gallery">
-                        <img src="${product.main_image}" alt="${product.name}" class="modal-main-image" id="modal-main-img" onclick="openLightbox('${product.main_image}')">
-                        <div class="modal-thumbnails">
-                            ${product.gallery_images.map(img => `
-                                <img src="${img}" class="modal-thumb" onclick="document.getElementById('modal-main-img').src='${img}'">
-                            `).join('')}
+            let total = 0;
+            container.innerHTML = cart.map((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <img src="${item.image}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-variant">${item.color || 'Default'} · ${item.size || 'Standard'}</div>
+                            <div class="cart-item-price">฿${item.price.toLocaleString()}</div>
                         </div>
-                    </div>
-                    <div class="modal-info">
-                        <h2>${product.name}</h2>
-                        <div class="product-category" style="display: inline-block; margin-bottom: 0.5rem;">${product.category} | ${product.brand}</div>
-                        <div class="modal-price">฿${product.price.toLocaleString()}</div>
-                        <p>${product.full_description}</p>
-                        
-                        ${colorsArray.length ? `
-                            <div class="modal-colors">
-                                <strong>Colors:</strong><br>
-                                ${colorsArray.map(c => `
-                                    <span class="color-swatch" style="background: ${c.hex}" title="${c.name}"></span>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                        
-                        ${optionsArray.length ? `
-                            <div class="modal-options">
-                                <strong>Available Sizes:</strong><br>
-                                ${optionsArray.map(opt => `
-                                    <span style="display: inline-block; background: #f0f0f0; padding: 0.3rem 0.8rem; border-radius: 20px; margin: 0.25rem;">${opt}</span>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                        
-                        ${featuresArray.length ? `
-                            <div class="modal-features" style="margin-top: 1rem;">
-                                <strong>Key Features:</strong>
-                                <ul>
-                                    ${featuresArray.map(f => `<li>${f.trim()}</li>`).join('')}
-                                </ul>
-                            </div>
-                        ` : ''}
-                        
-                        <div class="stock-badge" style="position: relative; display: inline-block; margin-top: 1rem;">
-                            ${product.stock_status}
-                        </div>
-                        
-                        <a href="https://janishammer.com/contact" class="cta-button" style="margin-top: 1.5rem; display: inline-block; padding: 0.8rem 2rem; font-size: 1rem;">
-                            📞 Contact for Purchase
-                        </a>
-                    </div>
-                </div>
-            `;
-            
-            modal.style.display = 'block';
-        }
-        
-        // Filter event listeners
-        document.querySelectorAll('.cat-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                renderProducts();
-            });
-        });
-        
-        document.querySelectorAll('.brand-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                renderProducts();
-            });
-        });
-        
-        const minInput = document.getElementById('min-price');
-        const maxInput = document.getElementById('max-price');
-        const slider = document.getElementById('price-slider');
-        
-        function updatePriceFilters() {
-            const min = parseInt(minInput.value) || 0;
-            const max = parseInt(maxInput.value) || 10000;
-            slider.value = max;
-            renderProducts();
-        }
-        
-        minInput.addEventListener('input', updatePriceFilters);
-        maxInput.addEventListener('input', updatePriceFilters);
-        slider.addEventListener('input', (e) => {
-            maxInput.value = e.target.value;
-            updatePriceFilters();
-        });
-        
-        document.getElementById('reset-filters').addEventListener('click', () => {
-            minInput.value = 0;
-            maxInput.value = 10000;
-            slider.value = 10000;
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
-            document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.brand-btn[data-brand="all"]').classList.add('active');
-            renderProducts();
-        });
-        
-        // Modal close
-        const modal = document.getElementById('product-modal');
-        document.querySelector('.modal-close').onclick = () => modal.style.display = 'none';
-        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-        
-        // Initial render
-        renderProducts();
-        
-        // Make openLightbox globally available
-        window.openLightbox = openLightbox;
-    </script>
-</body>
-</html>
+                        <div class="cart-item-actions">
+                            <button class="cart-q
