@@ -69,7 +69,7 @@
             padding: 2rem;
         }
         
-        /* Search Section */
+        /* Search Section - Improved Hierarchy */
         .search-section {
             background: rgba(0,0,0,0.4);
             backdrop-filter: blur(10px);
@@ -90,29 +90,30 @@
             display: flex;
             flex-wrap: wrap;
             gap: 2rem;
-            justify-content: center;
+            justify-content: space-between;
             margin-bottom: 1.5rem;
         }
         
-        .filter-category {
+        .filter-category, .filter-brand {
             flex: 1;
             min-width: 200px;
         }
         
-        .filter-category label {
+        .filter-category label, .filter-brand label {
             display: block;
             color: white;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            font-size: 0.9rem;
         }
         
-        .category-buttons {
+        .category-buttons, .brand-buttons {
             display: flex;
             flex-wrap: wrap;
             gap: 0.75rem;
         }
         
-        .cat-btn {
+        .cat-btn, .brand-btn {
             background: rgba(255,255,255,0.2);
             color: white;
             border: 2px solid rgba(255,255,255,0.3);
@@ -121,15 +122,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
         
-        .cat-btn:hover {
+        .cat-btn:hover, .brand-btn:hover {
             background: rgba(212,225,87,0.3);
             border-color: #D4E157;
             transform: translateY(-2px);
         }
         
-        .cat-btn.active {
+        .cat-btn.active, .brand-btn.active {
             background: #D4E157;
             color: #33691E;
             border-color: #D4E157;
@@ -146,6 +149,7 @@
             color: white;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            font-size: 0.9rem;
         }
         
         .price-range {
@@ -161,7 +165,7 @@
             border-radius: 12px;
             border: none;
             background: rgba(255,255,255,0.9);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         .price-input:focus {
@@ -196,7 +200,7 @@
             display: flex;
             justify-content: space-between;
             color: white;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-top: 0.5rem;
         }
         
@@ -209,6 +213,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
+            align-self: flex-end;
         }
         
         .reset-btn:hover {
@@ -233,6 +238,8 @@
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.3);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         
         .product-card:hover {
@@ -254,6 +261,9 @@
         
         .product-info {
             padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .product-name {
@@ -272,6 +282,13 @@
             font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
+            align-self: flex-start;
+        }
+        
+        .product-brand {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 0.5rem;
         }
         
         .product-price {
@@ -283,7 +300,6 @@
         
         .product-price::before {
             content: "฿";
-            font-size: 1.2rem;
         }
         
         .product-desc {
@@ -291,6 +307,7 @@
             font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 1rem;
+            flex: 1;
         }
         
         .view-details {
@@ -306,6 +323,7 @@
             cursor: pointer;
             width: 100%;
             text-align: center;
+            margin-top: auto;
         }
         
         .view-details:hover {
@@ -343,7 +361,7 @@
             font-size: 1.2rem;
         }
         
-        /* CTA Section */
+        /* CTA Section - 2 Column Grid */
         .cta-section {
             background: rgba(0,0,0,0.5);
             backdrop-filter: blur(20px);
@@ -362,24 +380,37 @@
         }
         
         .image-stack {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+        }
+        
+        .stack-image-wrapper {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 24px;
+            transition: all 0.4s ease;
         }
         
         .stack-image {
-            max-width: 280px;
             width: 100%;
+            height: 100%;
+            object-fit: cover;
             border-radius: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             transition: all 0.4s ease;
             filter: brightness(0.95);
+            display: block;
         }
         
-        .stack-image:hover {
-            transform: translateY(-8px) scale(1.03);
+        .stack-image-wrapper:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+        
+        .stack-image-wrapper:hover .stack-image {
             filter: brightness(1);
             box-shadow: 0 25px 45px rgba(0,0,0,0.4);
         }
@@ -402,6 +433,47 @@
             transform: translateY(-3px) scale(1.02);
             background: linear-gradient(135deg, #AED581, #D4E157);
             box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .lightbox.active {
+            display: flex;
+        }
+        
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .lightbox-close:hover {
+            color: #D4E157;
         }
         
         /* Modal for Product Details */
@@ -490,10 +562,6 @@
             margin: 1rem 0;
         }
         
-        .modal-colors, .modal-options {
-            margin: 1rem 0;
-        }
-        
         .color-swatch {
             display: inline-block;
             width: 30px;
@@ -510,8 +578,15 @@
             .hero h2 { font-size: 1.2rem; }
             .modal-product-details { grid-template-columns: 1fr; }
             .filter-group { flex-direction: column; }
-            .image-stack { gap: 1rem; }
-            .stack-image { max-width: 220px; }
+            .image-stack { 
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .cat-btn, .brand-btn { 
+                white-space: normal;
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
         }
     </style>
 </head>
@@ -541,6 +616,17 @@
                     </div>
                 </div>
                 
+                <div class="filter-brand">
+                    <label>Brand</label>
+                    <div class="brand-buttons">
+                        <button class="brand-btn active" data-brand="all">All</button>
+                        <button class="brand-btn" data-brand="Brand X">Brand X</button>
+                        <button class="brand-btn" data-brand="Toxic">Toxic</button>
+                        <button class="brand-btn" data-brand="Outride">Outride</button>
+                        <button class="brand-btn" data-brand="Micro">Micro</button>
+                    </div>
+                </div>
+                
                 <div class="price-filter">
                     <label>Price Range (THB)</label>
                     <div class="price-range">
@@ -565,18 +651,32 @@
         </div>
     </div>
     
-    <!-- CTA SECTION -->
+    <!-- CTA SECTION - 2 Column Grid -->
     <div class="container">
         <div class="cta-section">
             <h1>📸 These are our catalogs for our available stocks</h1>
             <div class="image-stack">
-                <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764732/Old_school_only.png" alt="Old School" class="stack-image">
-                <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764735/Pop_Decks.png" alt="Pop Decks" class="stack-image">
-                <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764735/Outride_Surfskate.png" alt="Outride Surfskate" class="stack-image">
-                <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764726/Micro_catalog_2.png" alt="Micro Catalog" class="stack-image">
+                <div class="stack-image-wrapper" onclick="openLightbox('https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764732/Old_school_only.png')">
+                    <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764732/Old_school_only.png" alt="Old School" class="stack-image">
+                </div>
+                <div class="stack-image-wrapper" onclick="openLightbox('https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764735/Pop_Decks.png')">
+                    <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764735/Pop_Decks.png" alt="Pop Decks" class="stack-image">
+                </div>
+                <div class="stack-image-wrapper" onclick="openLightbox('https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764735/Outride_Surfskate.png')">
+                    <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764735/Outride_Surfskate.png" alt="Outride Surfskate" class="stack-image">
+                </div>
+                <div class="stack-image-wrapper" onclick="openLightbox('https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764726/Micro_catalog_2.png')">
+                    <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773764726/Micro_catalog_2.png" alt="Micro Catalog" class="stack-image">
+                </div>
             </div>
             <a href="https://janishammer.com/contact" class="cta-button">📞 Contact Us</a>
         </div>
+    </div>
+    
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-img" id="lightboxImg">
     </div>
     
     <!-- PRODUCT MODAL -->
@@ -588,11 +688,12 @@
     </div>
 
     <script>
-        // ===== SAMPLE PRODUCT DATA (Will be replaced by CSV injection) =====
+        // ===== SAMPLE PRODUCT DATA (All Skateboard Decks) =====
         const products = [
             {
                 id: 1,
                 name: "Josh Marlower Hammer head",
+                brand: "Brand X",
                 category: "Skateboard deck",
                 price: 6500,
                 main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
@@ -603,30 +704,12 @@
                 options: "7.75\",8.0\",8.25\"",
                 full_description: "Premium skateboard deck featuring Josh Marlower's signature hammer head graphic. Made from 7-ply Canadian maple, pro-grade concave for optimal control and pop.",
                 feature_details: "7-ply Canadian maple,Pro-grade concave,Signature graphic,Durable construction",
-                stock_status: "In Stock",
-                name_th: "จอช มาร์โลเวอร์ แฮมเมอร์เฮด",
-                full_description_th: "เด็คสเก็ตบอร์ดพรีเมียมลายแฮมเมอร์เฮด ซิกเนเจอร์ของจอช มาร์โลเวอร์"
+                stock_status: "In Stock"
             },
             {
                 id: 2,
-                name: "Ripstick I Reissue",
-                category: "Surf skate",
-                price: 5500,
-                main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/7bc405a44b6e4327110f39f6506fdb4a.png",
-                gallery_images: [
-                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/7bc405a44b6e4327110f39f6506fdb4a.png"
-                ],
-                colors: "Classic Red:#FF4444,Blue:#4444FF",
-                options: "29\",32\"",
-                full_description: "The iconic Ripstick I reissue brings back the classic surfskate experience. Perfect for carving and cruising with its unique truck system.",
-                feature_details: "Surfskate truck system,Classic design,Responsive carving,High-quality bearings",
-                stock_status: "In Stock",
-                name_th: "ริปสติ๊ก ไอ รีอิสซู",
-                full_description_th: "รีอิสซูคลาสสิคของเซิร์ฟสเก็ตชื่อดัง"
-            },
-            {
-                id: 3,
                 name: "Brand X Green",
+                brand: "Brand X",
                 category: "Skateboard deck",
                 price: 5500,
                 main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg",
@@ -637,13 +720,40 @@
                 options: "8.0\"",
                 full_description: "Brand X signature green deck. Made from premium maple with a vibrant green stain and professional-grade concave.",
                 feature_details: "Premium maple,Vibrant green finish,Pro concave,Durable",
-                stock_status: "Low Stock",
-                name_th: "แบรนด์ เอ็กซ์ กรีน",
-                full_description_th: "เด็คสเก็ตบอร์ดซิกเนเจอร์สีเขียวจากแบรนด์ X"
+                stock_status: "Low Stock"
+            },
+            {
+                id: 3,
+                name: "Brand X Classic",
+                brand: "Brand X",
+                category: "Skateboard deck",
+                price: 5900,
+                main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
+                gallery_images: [
+                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png"
+                ],
+                colors: "Black:#000000,White:#FFFFFF",
+                options: "7.75\",8.0\"",
+                full_description: "Classic Brand X deck with pro-grade concave and durable construction. Perfect for street and park skating.",
+                feature_details: "Classic design,Pro concave,Durable maple,Street ready",
+                stock_status: "In Stock"
             }
         ];
         
         let currentProducts = [...products];
+        
+        // Lightbox functions
+        function openLightbox(imageUrl) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            lightboxImg.src = imageUrl;
+            lightbox.classList.add('active');
+        }
+        
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+        }
         
         // Render products
         function renderProducts() {
@@ -651,11 +761,13 @@
             const minPrice = parseInt(document.getElementById('min-price').value) || 0;
             const maxPrice = parseInt(document.getElementById('max-price').value) || 10000;
             const activeCat = document.querySelector('.cat-btn.active').dataset.cat;
+            const activeBrand = document.querySelector('.brand-btn.active').dataset.brand;
             
             const filtered = products.filter(p => {
                 const priceMatch = p.price >= minPrice && p.price <= maxPrice;
                 const catMatch = activeCat === 'all' || p.category === activeCat;
-                return priceMatch && catMatch;
+                const brandMatch = activeBrand === 'all' || p.brand === activeBrand;
+                return priceMatch && catMatch && brandMatch;
             });
             
             if (filtered.length === 0) {
@@ -671,6 +783,7 @@
                     </div>
                     <div class="product-info">
                         <div class="product-category">${p.category}</div>
+                        <div class="product-brand">${p.brand}</div>
                         <h3 class="product-name">${p.name}</h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
                         <p class="product-desc">${p.full_description.substring(0, 80)}${p.full_description.length > 80 ? '...' : ''}</p>
@@ -694,11 +807,12 @@
             }) : [];
             
             const optionsArray = product.options ? product.options.split(',') : [];
+            const featuresArray = product.feature_details ? product.feature_details.split(',') : [];
             
             modalBody.innerHTML = `
                 <div class="modal-product-details">
                     <div class="modal-gallery">
-                        <img src="${product.main_image}" alt="${product.name}" class="modal-main-image" id="modal-main-img">
+                        <img src="${product.main_image}" alt="${product.name}" class="modal-main-image" id="modal-main-img" onclick="openLightbox('${product.main_image}')">
                         <div class="modal-thumbnails">
                             ${product.gallery_images.map(img => `
                                 <img src="${img}" class="modal-thumb" onclick="document.getElementById('modal-main-img').src='${img}'">
@@ -707,8 +821,8 @@
                     </div>
                     <div class="modal-info">
                         <h2>${product.name}</h2>
-                        <div class="product-category">${product.category}</div>
-                        <div class="modal-price">฿${product.price.toLocaleString()}</div>
+                        <div class="product-category">${product.category} | ${product.brand}</div>
+                        <div class="modal-price">${product.price.toLocaleString()}</div>
                         <p>${product.full_description}</p>
                         
                         ${colorsArray.length ? `
@@ -729,16 +843,22 @@
                             </div>
                         ` : ''}
                         
-                        <div class="modal-features" style="margin-top: 1rem;">
-                            <strong>Key Features:</strong>
-                            <ul>
-                                ${product.feature_details.split(',').map(f => `<li>${f.trim()}</li>`).join('')}
-                            </ul>
-                        </div>
+                        ${featuresArray.length ? `
+                            <div class="modal-features" style="margin-top: 1rem;">
+                                <strong>Key Features:</strong>
+                                <ul>
+                                    ${featuresArray.map(f => `<li>${f.trim()}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
                         
                         <div class="stock-badge" style="position: relative; display: inline-block; margin-top: 1rem;">
                             ${product.stock_status}
                         </div>
+                        
+                        <a href="https://janishammer.com/contact" class="cta-button" style="margin-top: 1.5rem; display: inline-block; padding: 0.8rem 2rem; font-size: 1rem;">
+                            📞 Contact for Purchase
+                        </a>
                     </div>
                 </div>
             `;
@@ -750,6 +870,14 @@
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProducts();
+            });
+        });
+        
+        document.querySelectorAll('.brand-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 renderProducts();
             });
@@ -778,17 +906,4 @@
             maxInput.value = 10000;
             slider.value = 10000;
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
-            renderProducts();
-        });
-        
-        // Modal close
-        const modal = document.getElementById('product-modal');
-        document.querySelector('.modal-close').onclick = () => modal.style.display = 'none';
-        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-        
-        // Initial render
-        renderProducts();
-    </script>
-</body>
-</html>
+            document.querySelector('.cat-btn[data-cat="all"]').classList.add
