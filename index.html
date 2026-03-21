@@ -740,7 +740,14 @@
         }
     </style>
 </head>
-<body>
+
+    
+    
+    
+    
+    
+    
+    <body>
     <!-- Floating Cart Button (Independent from navbar) -->
     <div class="cart-floating" id="cartFloating">
         <i class="fas fa-shopping-bag"></i>
@@ -881,58 +888,24 @@
     
     <script>
         // ===== PRODUCT DATA =====
-        const products = [
-            {
-                id: 1,
-                name: "Josh Marlower Hammer head",
-                brand: "Brand X",
-                category: "Skateboard deck",
-                price: 6500,
-                main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
-                gallery_images: [
-                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
-                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/7bc405a44b6e4327110f39f6506fdb4a.png",
-                    "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg"
-                ],
-                colors: ["Natural Wood", "Black", "Green"],
-                colorHex: ["#D2B48C", "#000000", "#4CAF50"],
-                sizes: ["7.75\"", "8.0\"", "8.25\""],
-                full_description: "Premium skateboard deck featuring Josh Marlower's signature hammer head graphic. Made from 7-ply Canadian maple, pro-grade concave for optimal control and pop.",
-                feature_details: ["7-ply Canadian maple", "Pro-grade concave", "Signature graphic", "Durable construction"],
-                stock_status: "In Stock"
-            },
-            {
-                id: 2,
-                name: "Brand X Green",
-                brand: "Brand X",
-                category: "Skateboard deck",
-                price: 5500,
-                main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg",
-                gallery_images: ["https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/5b8ffdd0da30850da7975411ef09fed5.jpg"],
-                colors: ["Green"],
-                colorHex: ["#4CAF50"],
-                sizes: ["8.0\""],
-                full_description: "Brand X signature green deck. Made from premium maple with a vibrant green stain and professional-grade concave.",
-                feature_details: ["Premium maple", "Vibrant green finish", "Pro concave", "Durable"],
-                stock_status: "Low Stock"
-            },
-            {
-                id: 3,
-                name: "Brand X Classic",
-                brand: "Brand X",
-                category: "Skateboard deck",
-                price: 5900,
-                main_image: "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png",
-                gallery_images: ["https://res.cloudinary.com/dfiomi0lb/image/upload/v1773763597/2cb1cca65bfda8ddd01c84fa122a5d69.png"],
-                colors: ["Black", "White"],
-                colorHex: ["#000000", "#FFFFFF"],
-                sizes: ["7.75\"", "8.0\""],
-                full_description: "Classic Brand X deck with pro-grade concave and durable construction. Perfect for street and park skating.",
-                feature_details: ["Classic design", "Pro concave", "Durable maple", "Street ready"],
-                stock_status: "In Stock"
-            }
-        ];
+     
+        let products = [];
         
+        async function loadProducts() {
+            try {
+                const response = await fetch('/products.json');
+                products = await response.json();
+                console.log(`✅ Loaded ${products.length} products from JSON`);
+                renderProducts();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                products = [];
+                renderProducts();
+            }
+        }
+
+// Load products when page loads
+loadProducts();        
         // Cart Data (shared across pages via localStorage)
         let cart = JSON.parse(localStorage.getItem('flowCart')) || [];
         
@@ -971,3 +944,5 @@
                         </div>
                         <div class="cart-item-actions">
                             <button class="cart-q
+
+            
