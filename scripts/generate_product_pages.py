@@ -139,7 +139,6 @@ def generate_product_page(product, lang='en'):
         product.get('color_hex', '')
     )
     sizes = parse_csv_list(product.get('options', ''))
-    features = parse_csv_list(product.get('feature_details', ''))
     
     # Handle feature_details with line breaks - preserve as is
     feature_details_raw = product.get('feature_details', '')
@@ -163,11 +162,10 @@ def generate_product_page(product, lang='en'):
         with open(csv_path, 'r', encoding='utf-8-sig') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # Make sure we have an id field
                 if 'id' in row and row['id']:
                     all_products.append(row)
     
-    # Filter out current product for recommendations (using string comparison since IDs might be strings)
+    # Filter out current product for recommendations
     product_id = product.get('id', '')
     recommendations = [p for p in all_products if p.get('id', '') != product_id][:4]
     
@@ -187,29 +185,10 @@ def generate_product_page(product, lang='en'):
         </div>
         '''
     
-    # Rest of the HTML generation continues...
-    # (Keep the rest of the function as is from the previous version)
+    price_value = int(float(product['price'])) if product.get('price') else 0
     
-    # Filter out current product for recommendations
-    recommendations = [p for p in all_products if p['id'] != product['id']][:4]
-    
-    # Build recommendations HTML
-    rec_html = ''
-    for rec in recommendations:
-        rec_name = rec['name'] if lang == 'en' else rec.get('name_th', rec['name'])
-        rec_slug = slugify(rec['name'])
-        rec_html += f'''
-        <div class="recommend-card" onclick="location.href='{lang_prefix}/product/{rec_slug}.html'">
-            <img src="{rec['main_image']}" class="recommend-card-image">
-            <div class="recommend-card-info">
-                <div class="recommend-card-name">{rec_name}</div>
-                <div class="recommend-card-price">{int(float(rec['price'])):,}</div>
-            </div>
-        </div>
-        '''
-    
-    # Build the HTML using string concatenation to avoid triple-quote issues
-    html_header = f'''<!DOCTYPE html>
+    # Build the HTML using triple quotes - escape any problematic characters
+    html = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
     <meta charset="UTF-8">
@@ -310,9 +289,7 @@ def generate_product_page(product, lang='en'):
         .stock-status.out-stock {{ background: rgba(244,67,54,0.1); color: #F44336; border: 1px solid rgba(244,67,54,0.3); }}
         .stock-status.pre-order {{ background: rgba(33,150,243,0.1); color: #2196F3; border: 1px solid rgba(33,150,243,0.3); }}
         .features-section h3 {{ font-size: 1rem; color: #1a1a2e; margin-bottom: 0.75rem; font-weight: 700; }}
-        .features-list {{ list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }}
-        .features-list li {{ display: flex; align-items: center; gap: 0.75rem; color: #555; font-size: 0.85rem; }}
-        .features-list li i {{ color: #D4E157; width: 20px; }}
+        .features-list {{ white-space: pre-line; line-height: 1.6; color: #555; font-size: 0.9rem; }}
         .color-options, .size-options {{ margin: 0.5rem 0; }}
         .color-options h3, .size-options h3 {{ font-size: 0.9rem; color: #1a1a2e; margin-bottom: 0.5rem; font-weight: 600; }}
         .color-swatches {{ display: flex; gap: 0.5rem; flex-wrap: wrap; }}
@@ -472,12 +449,12 @@ def generate_product_page(product, lang='en'):
                 <div><span class="product-category">{product['category']}</span></div>
                 <h1 class="product-name">{name}</h1>
                 <div class="product-brand"><i class="fas fa-tag"></i><span>{product.get('brand', 'Janis Flow')} · {product.get('collection', 'Premium')}</span></div>
-                <div class="product-price">{int(float(product['price'])):,}</div>
+                <div class="product-price">{price_value:,}</div>
                 <div class="stock-status {stock_class}"><i class="fas fa-{'check-circle' if product['stock_status'] == 'In Stock' else 'clock' if product['stock_status'] == 'Pre-order' else 'exclamation-circle'}"></i><span>{stock_status_text}</span></div>
                 
                 <div class="features-section">
                     <h3>Specifications</h3>
-                    <div class="features-list" style="white-space: pre-line;">{feature_details_raw}</div>
+                    <div class="features-list">{feature_details_raw}</div>
                 </div>
                 
                 {generate_color_options(colors_data)}
@@ -540,10 +517,10 @@ def generate_product_page(product, lang='en'):
     
     <script>
         const currentProduct = {{
-            id: '{product['id']}',
+            id: '{product.get('id', '')}',
             name: "{name}",
             brand: "{product.get('brand', 'Janis Flow')}",
-            price: {int(float(product['price']))},
+            price: {price_value},
             image: "{product['main_image']}",
             colors: {json.dumps([c['name'] for c in colors_data])},
             sizes: {json.dumps(sizes)},
@@ -638,7 +615,7 @@ def generate_product_page(product, lang='en'):
         function closeCart() {{ document.getElementById('cartModal').classList.remove('active'); }}
         function closeQuotationModal() {{ document.getElementById('quotationModal').classList.remove('active'); }}
         function showToast(msg) {{ const toast = document.getElementById('toast'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }}
-        function scrollSlider(dir) {{ const track = document.getElementById('sliderTrack'); track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: 'smooth' }); }}
+        function scrollSlider(dir) {{ const track = document.getElementById('sliderTrack'); track.scrollBy({{ left: dir * track.clientWidth * 0.8, behavior: 'smooth' }}); }}
         
         document.getElementById('cartFloating').addEventListener('click', openCart);
         document.getElementById('mainImageContainer').addEventListener('click', openLightbox);
@@ -649,7 +626,7 @@ def generate_product_page(product, lang='en'):
 </body>
 </html>'''
     
-    return html_header
+    return html
 
 def generate_products_json(products):
     """Generate products.json for main page dynamic loading"""
@@ -660,7 +637,7 @@ def generate_products_json(products):
             'name': p['name'],
             'brand': p.get('brand', 'Janis Flow'),
             'category': p['category'],
-            'price': int(float(p['price'])),
+            'price': int(float(p['price'])) if p.get('price') else 0,
             'main_image': p['main_image'],
             'full_description': p['full_description'][:120] + '...' if len(p['full_description']) > 120 else p['full_description'],
             'stock_status': p['stock_status']
@@ -701,20 +678,24 @@ def main():
     
     # Generate individual product pages
     for product in products:
-        # English page
-        en_html = generate_product_page(product, lang='en')
-        en_path = product_dir_en / f"{slugify(product['name'])}.html"
-        with open(en_path, 'w', encoding='utf-8') as f:
-            f.write(en_html)
-        print(f"✅ Generated: {en_path}")
-        
-        # Thai page (if Thai content exists)
-        if product.get('name_th') and product.get('full_description_th'):
-            th_html = generate_product_page(product, lang='th')
-            th_path = product_dir_th / f"{slugify(product['name'])}.html"
-            with open(th_path, 'w', encoding='utf-8') as f:
-                f.write(th_html)
-            print(f"✅ Generated: {th_path}")
+        try:
+            # English page
+            en_html = generate_product_page(product, lang='en')
+            en_path = product_dir_en / f"{slugify(product['name'])}.html"
+            with open(en_path, 'w', encoding='utf-8') as f:
+                f.write(en_html)
+            print(f"✅ Generated: {en_path}")
+            
+            # Thai page (if Thai content exists)
+            if product.get('name_th') and product.get('full_description_th'):
+                th_html = generate_product_page(product, lang='th')
+                th_path = product_dir_th / f"{slugify(product['name'])}.html"
+                with open(th_path, 'w', encoding='utf-8') as f:
+                    f.write(th_html)
+                print(f"✅ Generated: {th_path}")
+        except Exception as e:
+            print(f"❌ Error generating {product.get('name', 'unknown')}: {e}")
+            continue
     
     print("\n🎉 All product pages generated successfully!")
     print("📁 products.json created for main page dynamic loading")
