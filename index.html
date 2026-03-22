@@ -764,7 +764,7 @@
                         <div class="product-brand">${p.brand}</div>
                         <h3 class="product-name">${p.name}</h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
-                        <p class="product-desc">${p.full_description.substring(0, 80)}${p.full_description.length > 80 ? '...' : ''}</p>
+                        <p class="product-desc">${p.description ? p.description.substring(0, 80) : 'Premium quality product'}</p>
                         <button class="view-details">View Details →</button>
                     </div>
                 </div>
