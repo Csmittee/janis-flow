@@ -4,9 +4,13 @@ on:
   push:
     paths:
       - 'products.csv'
-      - 'scripts/generate_product_pages.py'  # ← Changed filename
+      - 'scripts/generate_product_pages.py'
     branches:
       - main
+
+# Add this permissions section
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -15,6 +19,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          # This ensures the action can push back
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -27,13 +34,12 @@ jobs:
       
       - name: Generate product pages
         run: |
-          python scripts/generate_product_pages.py  # ← Changed filename
+          python scripts/generate_product_pages.py
       
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # Only add directories that exist
-          git add product/ th/product/ 2>/dev/null || true
+          git add product/ th/product/ products.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Auto-generate product pages from CSV [skip ci]"
           git push
