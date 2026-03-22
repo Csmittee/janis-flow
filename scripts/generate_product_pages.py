@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Product Page Generator for Janis Flow
-Compact layout with close button (no navbar)
+Compact layout with close button - pages in /product/ folder
 """
 
 import csv
@@ -45,14 +45,6 @@ def generate_thumbnails(gallery_images, main_image):
         thumbs.append(f'<img src="{img}" class="thumbnail {active_class}" onclick="changeImage(this.src)">')
     return '\n'.join(thumbs)
 
-def generate_features(features):
-    if not features:
-        return '<li><i class="fas fa-check-circle"></i> Premium quality</li>'
-    items = []
-    for f in features:
-        items.append(f'<li><i class="fas fa-check-circle"></i> {f}</li>')
-    return '\n'.join(items)
-
 def generate_color_options(colors_data):
     if not colors_data or len(colors_data) == 0:
         return ''
@@ -86,9 +78,8 @@ def generate_size_options(sizes):
     '''
 
 def generate_product_page(product, lang='en'):
-    """Generate compact product detail page with close button"""
+    """Generate compact product detail page with close button - for /product/ folder"""
     
-    # Language-specific
     if lang == 'th':
         name = product.get('name_th', product['name'])
         description = product.get('full_description_th', product['full_description'])
@@ -103,11 +94,9 @@ def generate_product_page(product, lang='en'):
         stock_status_text = product['stock_status']
         back_link = '/'
     
-    # Parse data
     gallery_images = parse_csv_list(product.get('gallery_images', ''))
     colors_data = parse_color_swatches(product.get('colors', ''), product.get('color_hex', ''))
     sizes = parse_csv_list(product.get('options', ''))
-    features = parse_csv_list(product.get('feature_details', ''))
     feature_details_raw = product.get('feature_details', '')
     
     default_color = colors_data[0]['name'] if colors_data else 'Default'
@@ -118,7 +107,7 @@ def generate_product_page(product, lang='en'):
     
     price_value = int(float(product['price'])) if product.get('price') else 0
     
-    # Read all products for recommendations
+    # Recommendations
     all_products = []
     csv_path = Path(__file__).parent.parent / 'products.csv'
     if csv_path.exists():
@@ -136,8 +125,9 @@ def generate_product_page(product, lang='en'):
         rec_name = rec['name'] if lang == 'en' else rec.get('name_th', rec['name'])
         rec_slug = slugify(rec['name'])
         rec_price = int(float(rec['price'])) if rec.get('price') else 0
+        # For Flow, recommendations link to /product/ folder
         rec_html += f'''
-        <div class="recommend-card" onclick="location.href='{lang_prefix}/{rec_slug}.html'">
+        <div class="recommend-card" onclick="location.href='{lang_prefix}/product/{rec_slug}.html'">
             <img src="{rec.get('main_image', '')}" class="recommend-card-image">
             <div class="recommend-card-info">
                 <div class="recommend-card-name">{rec_name}</div>
@@ -145,7 +135,7 @@ def generate_product_page(product, lang='en'):
             </div>
         </div>'''
     
-    # FLOW BRAND COLORS
+    # FLOW BRAND COLORS - same as before
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
@@ -156,7 +146,7 @@ def generate_product_page(product, lang='en'):
     <meta property="og:title" content="{name}">
     <meta property="og:description" content="{description[:150]}">
     <meta property="og:image" content="{product['main_image']}">
-    <meta property="og:url" content="https://flow.janishammer.com{lang_prefix}/{slugify(product['name'])}.html">
+    <meta property="og:url" content="https://flow.janishammer.com{lang_prefix}/product/{slugify(product['name'])}.html">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -368,7 +358,8 @@ def main():
     print(f"📦 Loaded {len(products)} products from CSV")
     generate_products_json(products)
     
-    product_dir = Path(__file__).parent.parent
+    # FLOW: Create product folder and put pages there
+    product_dir = Path(__file__).parent.parent / 'product'
     product_dir.mkdir(exist_ok=True)
     
     for product in products:
