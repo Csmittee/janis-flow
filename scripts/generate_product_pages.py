@@ -318,7 +318,15 @@ def generate_product_page(product, lang='en'):
         function closeCart() {{ document.getElementById('cartModal').classList.remove('active'); }}
         function closeQuotationModal() {{ document.getElementById('quotationModal').classList.remove('active'); }}
         function showToast(msg) {{ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }}
-        function scrollSlider(dir) {{ const track=document.getElementById('sliderTrack'); track.scrollBy({{left:dir*track.clientWidth*0.8,behavior:'smooth'}}); }}
+        function scrollSlider(direction) {
+            const track = document.getElementById('sliderTrack');
+            if (!track) return;
+            const scrollAmount = track.clientWidth * 0.8;
+            track.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
         document.getElementById('cartFloating').addEventListener('click',openCart);
         document.getElementById('mainImageContainer').addEventListener('click',openLightbox);
         document.getElementById('zoomIcon').addEventListener('click',(e)=>{{ e.stopPropagation(); openLightbox(); }});
