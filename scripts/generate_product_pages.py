@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 Product Page Generator for Janis Flow
@@ -10,18 +9,19 @@ CSV Source: products.csv
 import csv
 import json
 import os
+import re
 from pathlib import Path
 from datetime import datetime
 
 def slugify(name):
     """Convert product name to URL-friendly slug"""
-    return name.lower().replace(' ', '-').replace('.', '').replace(',', '').replace('"', '')
+    return re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
 
 def parse_csv_list(value):
     """Parse comma-separated values from CSV"""
     if not value or value == '':
         return []
-    return [item.strip() for item in value.split(',')]
+    return [item.strip() for item in str(value).split(',')]
 
 def parse_color_swatches(colors_str, hex_str):
     """Parse colors and hex codes into array of objects"""
@@ -32,6 +32,7 @@ def parse_color_swatches(colors_str, hex_str):
         return [{'name': colors[i], 'hex': hexes[i]} for i in range(len(colors))]
     else:
         default_colors = {
+            'Natural': '#D2B48C',
             'Natural Wood': '#D2B48C',
             'Black': '#000000',
             'White': '#FFFFFF',
@@ -47,12 +48,12 @@ def parse_color_swatches(colors_str, hex_str):
 def generate_thumbnails(gallery_images, main_image):
     """Generate thumbnail gallery HTML"""
     thumbs = []
-    all_images = [main_image] + gallery_images
+    all_images = [main_image] + gallery_images if gallery_images else [main_image]
     # Remove duplicates
     seen = set()
     unique_images = []
     for img in all_images:
-        if img not in seen:
+        if img and img not in seen:
             seen.add(img)
             unique_images.append(img)
     
@@ -132,13 +133,16 @@ def generate_product_page(product, lang='en'):
         stock_status_text = product['stock_status']
     
     # Parse data
-    gallery_images = parse_csv_list(product.get('gallery_images', product['main_image']))
+    gallery_images = parse_csv_list(product.get('gallery_images', ''))
     colors_data = parse_color_swatches(
         product.get('colors', ''),
         product.get('color_hex', '')
     )
     sizes = parse_csv_list(product.get('options', ''))
     features = parse_csv_list(product.get('feature_details', ''))
+    
+    # Handle feature_details with line breaks - preserve as is
+    feature_details_raw = product.get('feature_details', '')
     
     # Get first color and size as default
     default_color = colors_data[0]['name'] if colors_data else 'Default'
@@ -174,12 +178,13 @@ def generate_product_page(product, lang='en'):
             <img src="{rec['main_image']}" class="recommend-card-image">
             <div class="recommend-card-info">
                 <div class="recommend-card-name">{rec_name}</div>
-                <div class="recommend-card-price">{int(rec['price']):,}</div>
+                <div class="recommend-card-price">{int(float(rec['price'])):,}</div>
             </div>
         </div>
         '''
     
-    html = f'''<!DOCTYPE html>
+    # Build the HTML using string concatenation to avoid triple-quote issues
+    html_header = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
     <meta charset="UTF-8">
@@ -441,13 +446,13 @@ def generate_product_page(product, lang='en'):
             <div class="product-info">
                 <div><span class="product-category">{product['category']}</span></div>
                 <h1 class="product-name">{name}</h1>
-                <div class="product-brand"><i class="fas fa-tag"></i><span>{product.get('brand', 'Janis Flow')} · {product.get('collection', 'Limited Edition')}</span></div>
-                <div class="product-price">{int(product['price']):,}</div>
+                <div class="product-brand"><i class="fas fa-tag"></i><span>{product.get('brand', 'Janis Flow')} · {product.get('collection', 'Premium')}</span></div>
+                <div class="product-price">{int(float(product['price'])):,}</div>
                 <div class="stock-status {stock_class}"><i class="fas fa-{'check-circle' if product['stock_status'] == 'In Stock' else 'clock' if product['stock_status'] == 'Pre-order' else 'exclamation-circle'}"></i><span>{stock_status_text}</span></div>
                 
                 <div class="features-section">
-                    <h3>Key Features</h3>
-                    <ul class="features-list">{generate_features(features)}</ul>
+                    <h3>Specifications</h3>
+                    <div class="features-list" style="white-space: pre-line;">{feature_details_raw}</div>
                 </div>
                 
                 {generate_color_options(colors_data)}
@@ -510,10 +515,10 @@ def generate_product_page(product, lang='en'):
     
     <script>
         const currentProduct = {{
-            id: {product['id']},
+            id: '{product['id']}',
             name: "{name}",
             brand: "{product.get('brand', 'Janis Flow')}",
-            price: {product['price']},
+            price: {int(float(product['price']))},
             image: "{product['main_image']}",
             colors: {json.dumps([c['name'] for c in colors_data])},
             sizes: {json.dumps(sizes)},
@@ -601,7 +606,7 @@ def generate_product_page(product, lang='en'):
         function selectColor(element, color) {{ document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected')); element.classList.add('selected'); currentColor = color; }}
         function selectSize(element, size) {{ document.querySelectorAll('.size-btn').forEach(s => s.classList.remove('selected')); element.classList.add('selected'); currentSize = size; }}
         function toggleWishlist(btn) {{ const icon = btn.querySelector('i'); icon.classList.toggle('far'); icon.classList.toggle('fas'); showToast(icon.classList.contains('fas') ? 'Added to wishlist' : 'Removed from wishlist'); }}
-        function changeImage(src) {{ document.getElementById('mainImage').src = src; document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active')); if (event.target.classList) event.target.classList.add('active'); }}
+        function changeImage(src) {{ document.getElementById('mainImage').src = src; document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active')); if (event.target && event.target.classList) event.target.classList.add('active'); }}
         function openLightbox() {{ const lb = document.getElementById('lightbox'); document.getElementById('lightboxImg').src = document.getElementById('mainImage').src; lb.classList.add('active'); }}
         function closeLightbox() {{ document.getElementById('lightbox').classList.remove('active'); }}
         function openCart() {{ document.getElementById('cartModal').classList.add('active'); renderCartItems(); }}
@@ -617,20 +622,20 @@ def generate_product_page(product, lang='en'):
         updateCartUI();
     </script>
 </body>
-</html>
-"""
-    return html
+</html>'''
+    
+    return html_header
 
 def generate_products_json(products):
     """Generate products.json for main page dynamic loading"""
     json_data = []
     for p in products:
         json_data.append({
-            'id': int(p['id']),
+            'id': p['id'],
             'name': p['name'],
             'brand': p.get('brand', 'Janis Flow'),
             'category': p['category'],
-            'price': int(p['price']),
+            'price': int(float(p['price'])),
             'main_image': p['main_image'],
             'full_description': p['full_description'][:120] + '...' if len(p['full_description']) > 120 else p['full_description'],
             'stock_status': p['stock_status']
@@ -652,7 +657,7 @@ def main():
         return
     
     products = []
-    with open(csv_path, 'r', encoding='utf-8') as f:
+    with open(csv_path, 'r', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
         for row in reader:
             products.append(row)
