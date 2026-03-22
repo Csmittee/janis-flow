@@ -1,0 +1,112 @@
+[
+  {
+    "id": "IFP-007-Ref",
+    "name": "Maple Reformer",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 44221,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/v1770519987/d5830d304041955c78935aea441e483f_e7j0uf.jpg",
+    "full_description": "All-purpose reformer for versatile Pilates exercises",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-004-Ref",
+    "name": "Oak Reformer With Half Tower",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 45684,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/34DA25A5-DFA9-4B1B-8637-513F93A4CC4B_zhix6x.jpg",
+    "full_description": "All-purpose reformer for versatile Pilates exercises Half tower",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-010-Cad",
+    "name": "Oak Cadillac",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 35997,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/%E7%99%BD%E5%BA%95_efannj.jpg",
+    "full_description": "Elevated, versatile Pilates apparatus for varied movements.",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-008-Ref",
+    "name": "Oak Reformer With Full Tower",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 61036,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/v1770479065/10527f0671a54f02ab2121b8eaaf8dad_oj17kb.jpg",
+    "full_description": "All-purpose reformer for versatile Pilates exercises full tower",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-002-Ref",
+    "name": "Maple Reformer With Full Tower",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 69811,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/10527f0671a54f02ab2121b8eaaf8dad_oj17kb.jpg",
+    "full_description": "All-purpose reformer for versatile Pilates exercises full tower",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-001-Cha",
+    "name": "Oak Wunda Chair",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 16046,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/e_enhance/r_20/e_enhance/r_20/Maple-Wunda-Chair.27.3-1_xacrjt.jpg",
+    "full_description": "Compact chair for strength, stability, and balance training.",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-011-Bar",
+    "name": "Oak Ladder Barrel",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 16816,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/5_n0y4jy.jpg",
+    "full_description": "Curved apparatus for spine mobility and muscle stretching.",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-003-Ref",
+    "name": "Aluminum Reformer With Full Tower",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 13560,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/v1773171812/reformer--Immovable-bar.77.3-5_chjf9j.jpg",
+    "full_description": "All-purpose reformer for versatile Pilates exercises full tower",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-009-Ref",
+    "name": "BA Reformer With Full Tower",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 77417,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/10527f0671a54f02ab2121b8eaaf8dad_oj17kb.jpg",
+    "full_description": "All-purpose reformer for versatile Pilates exercises full tower",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-005-Lad",
+    "name": "BA Combination ladder bucket",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 58875,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/2275bff3f9682101419e2bbaca05c5f2_j3ef1j.jpg",
+    "full_description": "Compact chair for strength, stability, and balance training.",
+    "stock_status": ""
+  },
+  {
+    "id": "IFP-006-Ref",
+    "name": "Oak reformer",
+    "brand": "Adjust body",
+    "category": "Pilates machine",
+    "price": 35934,
+    "main_image": "https://res.cloudinary.com/dfiomi0lb/image/upload/dfc16146b2f5408bfeef79035d0ab7fe_n6815j.jpg",
+    "full_description": "All-purpose reformer for versatile Pilates exercises",
+    "stock_status": ""
+  }
+]
