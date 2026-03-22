@@ -160,10 +160,35 @@ def generate_product_page(product, lang='en'):
     all_products = []
     csv_path = Path(__file__).parent.parent / 'products.csv'
     if csv_path.exists():
-        with open(csv_path, 'r', encoding='utf-8') as f:
+        with open(csv_path, 'r', encoding='utf-8-sig') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                all_products.append(row)
+                # Make sure we have an id field
+                if 'id' in row and row['id']:
+                    all_products.append(row)
+    
+    # Filter out current product for recommendations (using string comparison since IDs might be strings)
+    product_id = product.get('id', '')
+    recommendations = [p for p in all_products if p.get('id', '') != product_id][:4]
+    
+    # Build recommendations HTML
+    rec_html = ''
+    for rec in recommendations:
+        rec_name = rec['name'] if lang == 'en' else rec.get('name_th', rec['name'])
+        rec_slug = slugify(rec['name'])
+        rec_price = int(float(rec['price'])) if rec.get('price') else 0
+        rec_html += f'''
+        <div class="recommend-card" onclick="location.href='{lang_prefix}/product/{rec_slug}.html'">
+            <img src="{rec.get('main_image', '')}" class="recommend-card-image">
+            <div class="recommend-card-info">
+                <div class="recommend-card-name">{rec_name}</div>
+                <div class="recommend-card-price">{rec_price:,}</div>
+            </div>
+        </div>
+        '''
+    
+    # Rest of the HTML generation continues...
+    # (Keep the rest of the function as is from the previous version)
     
     # Filter out current product for recommendations
     recommendations = [p for p in all_products if p['id'] != product['id']][:4]
