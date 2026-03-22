@@ -344,9 +344,29 @@ def generate_products_json(products):
 
 def main():
     csv_path = Path(__file__).parent.parent / 'products.csv'
+    
     if not csv_path.exists():
         print(f"❌ Error: {csv_path} not found!")
         return
+    
+    # ===== CLEAN OLD FILES =====
+    product_dir = Path(__file__).parent.parent / 'product'
+    th_product_dir = Path(__file__).parent.parent / 'th' / 'product'
+    
+    import shutil
+    if product_dir.exists():
+        shutil.rmtree(product_dir)
+        print(f"🗑️  Deleted old product folder: {product_dir}")
+    
+    if th_product_dir.exists():
+        shutil.rmtree(th_product_dir)
+        print(f"🗑️  Deleted old Thai product folder: {th_product_dir}")
+    
+    # Create fresh directories
+    product_dir.mkdir(exist_ok=True)
+    th_product_dir.mkdir(parents=True, exist_ok=True)
+    print(f"📁 Created fresh product folders")
+    # ===== END CLEAN =====
     
     products = []
     with open(csv_path, 'r', encoding='utf-8-sig') as f:
@@ -358,23 +378,20 @@ def main():
     print(f"📦 Loaded {len(products)} products from CSV")
     generate_products_json(products)
     
-    # FLOW: Create product folder and put pages there
-    product_dir = Path(__file__).parent.parent / 'product'
-    product_dir.mkdir(exist_ok=True)
-    
+    # Generate individual product pages
     for product in products:
         try:
+            # English page
             en_html = generate_product_page(product, lang='en')
             en_path = product_dir / f"{slugify(product['name'])}.html"
             with open(en_path, 'w', encoding='utf-8') as f:
                 f.write(en_html)
             print(f"✅ Generated: {en_path}")
             
+            # Thai page (if Thai content exists)
             if product.get('name_th') and product.get('full_description_th'):
-                th_dir = product_dir / 'th'
-                th_dir.mkdir(exist_ok=True)
                 th_html = generate_product_page(product, lang='th')
-                th_path = th_dir / f"{slugify(product['name'])}.html"
+                th_path = th_product_dir / f"{slugify(product['name'])}.html"
                 with open(th_path, 'w', encoding='utf-8') as f:
                     f.write(th_html)
                 print(f"✅ Generated: {th_path}")
