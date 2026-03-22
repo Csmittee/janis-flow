@@ -277,7 +277,13 @@
         .product-image {
             width: 100%;
             height: 280px;
-            object-fit: cover;
+            object-fit: contain;
+            background: #f5f5f5;
+            transition: transform 0.4s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.02);
         }
         
         .product-info {
@@ -325,10 +331,34 @@
         
         .product-desc {
             color: #666;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            line-height: 1.4;
             margin-bottom: 1rem;
             flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .product-desc:hover {
+            white-space: normal;
+            background: white;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            padding: 0.75rem;
+            margin: -0.75rem -0.75rem 0.5rem -0.75rem;
+            border-radius: 12px;
+        }
+        
+        .read-more {
+            color: #D4E157;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-block;
+            margin-left: 0.25rem;
         }
         
         .view-details {
@@ -612,7 +642,7 @@
     <section class="hero">
         <img src="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png" alt="Janis Flow" class="hero-logo">
         <h1>Let's flow with us!</h1>
-       <h2>Premium skateboards, surfskates, and lifestyle gear — quality you can trust</h2>
+        <h2>Premium skateboards, surfskates, and lifestyle gear — quality you can trust</h2>
     </section>
 
     <div class="container">
@@ -623,7 +653,6 @@
                     <label>Category</label>
                     <div class="category-buttons">
                         <button class="cat-btn active" data-cat="all">All</button>
-                       
                         <button class="cat-btn" data-cat="Skateboard deck">🛹 Skateboard Deck</button>
                         <button class="cat-btn" data-cat="Surf skate">🏄 Surf Skate</button>
                         <button class="cat-btn" data-cat="T shirt">👕 T-Shirt</button>
@@ -634,8 +663,7 @@
                     <label>Brand</label>
                     <div class="brand-buttons">
                         <button class="brand-btn active" data-brand="all">All</button>
-                        <button class="brand-btn" data-brand="Adjust body">Adjust Body</button>
-                        <button class="brand-btn" data-brand="Brand X">Brand X</button>
+                        <button class="brand-btn" data-brand="Brand-x">Brand X</button>
                         <button class="brand-btn" data-brand="Toxic">Toxic</button>
                         <button class="brand-btn" data-brand="Outride">Outride</button>
                     </div>
@@ -646,12 +674,12 @@
                     <div class="price-range">
                         <input type="number" id="min-price" class="price-input" placeholder="Min" value="0">
                         <span>-</span>
-                        <input type="number" id="max-price" class="price-input" placeholder="Max" value="100000">
-                        <input type="range" id="price-slider" class="price-slider" min="0" max="100000" value="100000">
+                        <input type="number" id="max-price" class="price-input" placeholder="Max" value="50000">
+                        <input type="range" id="price-slider" class="price-slider" min="0" max="50000" value="50000">
                     </div>
                     <div class="price-values">
                         <span>฿0</span>
-                        <span>฿100,000+</span>
+                        <span>฿50,000+</span>
                     </div>
                 </div>
                 
@@ -734,12 +762,18 @@
             return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         }
         
+        function truncateDescription(desc, maxLength = 100) {
+            if (!desc) return 'Premium quality product';
+            if (desc.length <= maxLength) return desc;
+            return desc.substring(0, maxLength);
+        }
+        
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             if (!grid) return;
             
             const minPrice = parseInt(document.getElementById('min-price')?.value) || 0;
-            const maxPrice = parseInt(document.getElementById('max-price')?.value) || 100000;
+            const maxPrice = parseInt(document.getElementById('max-price')?.value) || 50000;
             const activeCat = document.querySelector('.cat-btn.active')?.dataset.cat || 'all';
             const activeBrand = document.querySelector('.brand-btn.active')?.dataset.brand || 'all';
             
@@ -755,7 +789,10 @@
                 return;
             }
             
-            grid.innerHTML = filtered.map(p => `
+            grid.innerHTML = filtered.map(p => {
+                const shortDesc = truncateDescription(p.description, 100);
+                const hasMore = p.description && p.description.length > 100;
+                return `
                 <div class="product-card" onclick="location.href='/product/${slugify(p.name)}.html'">
                     <img src="${p.main_image}" alt="${p.name}" class="product-image">
                     <div class="stock-badge">${p.stock_status || 'In Stock'}</div>
@@ -764,11 +801,13 @@
                         <div class="product-brand">${p.brand}</div>
                         <h3 class="product-name">${p.name}</h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
-                        <p class="product-desc">${p.description ? p.description.substring(0, 80) : 'Premium quality product'}</p>
+                        <div class="product-desc">
+                            ${shortDesc}${hasMore ? '<span class="read-more"> ...read more</span>' : ''}
+                        </div>
                         <button class="view-details">View Details →</button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
         
         async function loadProducts() {
@@ -919,8 +958,8 @@
             
             document.getElementById('reset-filters')?.addEventListener('click', () => {
                 if (minInput) minInput.value = 0;
-                if (maxInput) maxInput.value = 100000;
-                if (slider) slider.value = 100000;
+                if (maxInput) maxInput.value = 50000;
+                if (slider) slider.value = 50000;
                 document.querySelectorAll('.cat-btn, .brand-btn').forEach(b => b.classList.remove('active'));
                 document.querySelector('.cat-btn[data-cat="all"]')?.classList.add('active');
                 document.querySelector('.brand-btn[data-brand="all"]')?.classList.add('active');
