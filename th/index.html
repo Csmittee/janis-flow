@@ -790,8 +790,9 @@
             }
             
             grid.innerHTML = filtered.map(p => {
-                const shortDesc = truncateDescription(p.description, 100);
-                const hasMore = p.description && p.description.length > 100;
+                const thaiDesc = p.description_th || p.description;
+                const shortDesc = truncateDescription(thaiDesc, 100);
+                const hasMore = thaiDesc && thaiDesc.length > 100;
                 return `
                 <div class="product-card" onclick="location.href='/th/product/${slugify(p.name)}.html'">
                     <img src="${p.main_image}" alt="${p.name}" class="product-image">
