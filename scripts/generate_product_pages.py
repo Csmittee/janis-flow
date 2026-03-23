@@ -15,7 +15,15 @@ def slugify(name):
 def parse_csv_list(value):
     if not value or value == '':
         return []
-    return [item.strip() for item in str(value).split(',')]
+    # First try line break split (since this is what AirTable uses)
+    if '\n' in str(value):
+        return [item.strip() for item in str(value).split('\n')]
+    # Then try comma split (fallback)
+    elif ',' in str(value):
+        return [item.strip() for item in str(value).split(',')]
+    # Single value
+    else:
+        return [str(value).strip()]
 
 def parse_color_swatches(colors_str, hex_str):
     colors = parse_csv_list(colors_str)
