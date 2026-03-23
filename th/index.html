@@ -789,18 +789,19 @@
                 return;
             }
             
-            grid.innerHTML = filtered.map(p => {
+           grid.innerHTML = filtered.map(p => {
+                const thaiName = p.name_th || p.name;
                 const thaiDesc = p.description_th || p.description;
                 const shortDesc = truncateDescription(thaiDesc, 100);
                 const hasMore = thaiDesc && thaiDesc.length > 100;
                 return `
                 <div class="product-card" onclick="location.href='/th/product/${slugify(p.name)}.html'">
-                    <img src="${p.main_image}" alt="${p.name}" class="product-image">
+                    <img src="${p.main_image}" alt="${thaiName}" class="product-image">
                     <div class="stock-badge">${p.stock_status || 'มีสินค้า'}</div>
                     <div class="product-info">
                         <div class="product-category">${p.category === 'Skateboard deck' ? 'สเก็ตบอร์ด' : p.category === 'Surfskate' ? 'เซิร์ฟสเก็ต' : p.category}</div>
                         <div class="product-brand">${p.brand}</div>
-                        <h3 class="product-name">${p.name_th || p.name}</h3>
+                        <h3 class="product-name">${thaiName}</h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
                         <div class="product-desc" onclick="event.stopPropagation(); this.classList.add('expanded')">
                             ${shortDesc}
