@@ -202,6 +202,23 @@ def generate_product_page(product, lang='en'):
         .stock-status.low-stock {{ background: rgba(255,152,0,0.1); color: #FF9800; }}
         .features-section h3 {{ font-size: 0.9rem; color: #1a1a2e; margin-bottom: 0.5rem; }}
         .features-list {{ white-space: pre-line; line-height: 1.5; color: #555; font-size: 0.8rem; }}
+        .full-description {
+            margin-top: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        .full-description h3 {
+            font-size: 0.9rem;
+            color: #1a1a2e;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .full-description p {
+            color: #555;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
         .color-options, .size-options {{ margin: 0.25rem 0; }}
         .color-options h3, .size-options h3 {{ font-size: 0.8rem; margin-bottom: 0.4rem; }}
         .color-swatches {{ display: flex; gap: 0.5rem; flex-wrap: wrap; }}
@@ -282,6 +299,11 @@ def generate_product_page(product, lang='en'):
                 <div class="features-section"><h3>Specifications</h3><div class="features-list">{feature_details_raw}</div></div>
                 {generate_color_options(colors_data)}
                 {generate_size_options(sizes)}
+                # Add this HTML block right after the features section
+                <div class="full-description">
+                    <h3>Full Description</h3>
+                    <p>{description}</p>
+                </div>                
                 <div class="quantity-selector"><h3>Quantity</h3><div class="quantity-control"><button class="qty-btn" onclick="updateQuantity(-1)">-</button><input type="number" id="quantity" class="quantity-input" value="1" min="1" max="99" readonly><button class="qty-btn" onclick="updateQuantity(1)">+</button></div></div>
                 <div class="action-buttons"><button class="btn-add-to-cart" onclick="addToCart()"><i class="fas fa-shopping-cart"></i> Add to Cart</button><button class="btn-wishlist" onclick="toggleWishlist(this)"><i class="far fa-heart"></i></button></div>
             </div>
