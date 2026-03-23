@@ -97,7 +97,10 @@ def generate_product_page(product, lang='en'):
     gallery_images = parse_csv_list(product.get('gallery_images', ''))
     colors_data = parse_color_swatches(product.get('colors', ''), product.get('color_hex', ''))
     sizes = parse_csv_list(product.get('options', ''))
-    feature_details_raw = product.get('feature_details', '')
+    if lang == 'th':
+        feature_details_raw = product.get('feature_details_th', product.get('feature_details', ''))
+    else:
+        feature_details_raw = product.get('feature_details', '')
     
     default_color = colors_data[0]['name'] if colors_data else 'Default'
     default_size = sizes[0] if sizes else 'Standard'
