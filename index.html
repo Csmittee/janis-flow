@@ -350,7 +350,10 @@
             z-index: 10;
             box-shadow: 0 2px 12px rgba(0,0,0,0.1);
             padding: 0.75rem;
-            margin: -0.75rem -0.75rem 0.5rem -0.75rem;
+            margin-top: -0.75rem;
+            margin-right: -0.75rem;
+            margin-bottom: 0.5rem;
+            margin-left: -0.75rem;
             border-radius: 12px;
         }
         
@@ -655,7 +658,7 @@
                     <div class="category-buttons">
                         <button class="cat-btn active" data-cat="all">All</button>
                         <button class="cat-btn" data-cat="Skateboard deck">🛹 Skateboard Deck</button>
-                        <button class="cat-btn" data-cat="Surf skate">🏄 Surf Skate</button>
+                        <button class="cat-btn" data-cat="Surfskate">🏄 Surf Skate</button>
                         <button class="cat-btn" data-cat="T shirt">👕 T-Shirt</button>
                     </div>
                 </div>
@@ -802,8 +805,9 @@
                         <div class="product-brand">${p.brand}</div>
                         <h3 class="product-name">${p.name}</h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
-                        <div class="product-desc" onclick="event.stopPropagation(); this.classList.toggle('expanded')">
-                            ${shortDesc}${hasMore ? '<span class="read-more"> ...read more</span>' : ''}
+                        <div class="product-desc" onclick="event.stopPropagation(); this.classList.add('expanded')">
+                            ${shortDesc}
+                            ${hasMore ? '<span class="read-more" onclick="event.stopPropagation(); this.parentElement.classList.toggle(\'expanded\')"> ...read more</span>' : ''}
                         </div>
                         <button class="view-details">View Details →</button>
                     </div>
