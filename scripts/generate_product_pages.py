@@ -365,10 +365,20 @@ def generate_product_page(product, lang='en'):
 def generate_products_json(products):
     json_data = []
     for p in products:
+        # Get Thai description or fallback to English
+        thai_desc = p.get('full_description_th', p['full_description'])
+        thai_desc_short = thai_desc[:120] + '...' if len(thai_desc) > 120 else thai_desc
+        
         json_data.append({
-            'id': p['id'], 'name': p['name'], 'brand': p.get('brand', 'Janis Flow'),
-            'category': p['category'], 'price': int(float(p['price'])) if p.get('price') else 0,
-            'main_image': p['main_image'], 'description': p['full_description'][:120] + '...' if len(p['full_description']) > 120 else p['full_description'],
+            'id': p['id'], 
+            'name': p['name'], 
+            'name_th': p.get('name_th', p['name']),
+            'brand': p.get('brand', 'Janis Flow'),
+            'category': p['category'], 
+            'price': int(float(p['price'])) if p.get('price') else 0,
+            'main_image': p['main_image'], 
+            'description': p['full_description'][:120] + '...' if len(p['full_description']) > 120 else p['full_description'],
+            'description_th': thai_desc_short,
             'stock_status': p['stock_status']
         })
     with open(Path(__file__).parent.parent / 'products.json', 'w', encoding='utf-8') as f:
