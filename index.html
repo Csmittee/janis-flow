@@ -279,6 +279,7 @@
             height: 280px;
             object-fit: contain;
             background: #f5f5f5;
+            padding-top: 20px;
             transition: transform 0.4s ease;
         }
         
@@ -342,7 +343,7 @@
             cursor: pointer;
         }
         
-        .product-desc:hover {
+        .product-desc.expanded {
             white-space: normal;
             background: white;
             position: relative;
@@ -801,7 +802,7 @@
                         <div class="product-brand">${p.brand}</div>
                         <h3 class="product-name">${p.name}</h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
-                        <div class="product-desc">
+                        <div class="product-desc" onclick="event.stopPropagation(); this.classList.toggle('expanded')">
                             ${shortDesc}${hasMore ? '<span class="read-more"> ...read more</span>' : ''}
                         </div>
                         <button class="view-details">View Details →</button>
