@@ -2,6 +2,7 @@
 """
 Product Page Generator for Janis Flow
 Compact layout with close button - pages in /product/ folder
+Fixed with anti-flicker and correct script order
 """
 
 import csv
@@ -15,13 +16,10 @@ def slugify(name):
 def parse_csv_list(value):
     if not value or value == '':
         return []
-    # First try line break split (since this is what AirTable uses)
     if '\n' in str(value):
         return [item.strip() for item in str(value).split('\n')]
-    # Then try comma split (fallback)
     elif ',' in str(value):
         return [item.strip() for item in str(value).split(',')]
-    # Single value
     else:
         return [str(value).strip()]
 
@@ -105,6 +103,7 @@ def generate_product_page(product, lang='en'):
     gallery_images = parse_csv_list(product.get('gallery_images', ''))
     colors_data = parse_color_swatches(product.get('colors', ''), product.get('color_hex', ''))
     sizes = parse_csv_list(product.get('options', ''))
+    
     if lang == 'th':
         feature_details_raw = product.get('feature_details_th', product.get('feature_details', ''))
     else:
@@ -136,7 +135,6 @@ def generate_product_page(product, lang='en'):
         rec_name = rec['name'] if lang == 'en' else rec.get('name_th', rec['name'])
         rec_slug = slugify(rec['name'])
         rec_price = int(float(rec['price'])) if rec.get('price') else 0
-        # For Flow, recommendations link to /product/ folder
         rec_html += f'''
         <div class="recommend-card" onclick="location.href='{lang_prefix}/product/{rec_slug}.html'">
             <img src="{rec.get('main_image', '')}" class="recommend-card-image">
@@ -146,7 +144,7 @@ def generate_product_page(product, lang='en'):
             </div>
         </div>'''
     
-    # FLOW BRAND COLORS - same as before
+    # FIXED: Added anti-flicker and removed duplicate FA/GFonts (injector loads them)
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
@@ -158,8 +156,14 @@ def generate_product_page(product, lang='en'):
     <meta property="og:description" content="{description[:150]}">
     <meta property="og:image" content="{product['main_image']}">
     <meta property="og:url" content="https://flow.janishammer.com{lang_prefix}/product/{slugify(product['name'])}.html">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Anti-flicker: hides page until injector builds correct navbar -->
+    <style id="jh-anti-flicker">body {{ opacity: 0; }}</style>
+    
+    <!-- INJECTORS (config must load before core) -->
+    <script src="https://assets.janishammer.com/js/injector-config.js"></script>
+    <script src="https://assets.janishammer.com/js/injector-core.js"></script>
+    
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
@@ -213,7 +217,7 @@ def generate_product_page(product, lang='en'):
         .stock-status.low-stock {{ background: rgba(255,152,0,0.1); color: #FF9800; }}
         .features-section h3 {{ font-size: 0.9rem; color: #1a1a2e; margin-bottom: 0.5rem; }}
         .features-list {{ white-space: pre-line; line-height: 1.5; color: #555; font-size: 0.8rem; }}
-               .full-description {{
+        .full-description {{
             margin-top: 1rem;
             padding-top: 0.5rem;
             border-top: 1px solid #e0e0e0;
@@ -373,7 +377,6 @@ def generate_product_page(product, lang='en'):
 def generate_products_json(products):
     json_data = []
     for p in products:
-        # Get Thai description or fallback to English
         thai_desc = p.get('full_description_th', p['full_description'])
         thai_desc_short = thai_desc[:120] + '...' if len(thai_desc) > 120 else thai_desc
         
@@ -400,7 +403,7 @@ def main():
         print(f"❌ Error: {csv_path} not found!")
         return
     
-    # ===== CLEAN OLD FILES =====
+    # Clean old files
     product_dir = Path(__file__).parent.parent / 'product'
     th_product_dir = Path(__file__).parent.parent / 'th' / 'product'
     
@@ -413,11 +416,9 @@ def main():
         shutil.rmtree(th_product_dir)
         print(f"🗑️  Deleted old Thai product folder: {th_product_dir}")
     
-    # Create fresh directories
     product_dir.mkdir(exist_ok=True)
     th_product_dir.mkdir(parents=True, exist_ok=True)
     print(f"📁 Created fresh product folders")
-    # ===== END CLEAN =====
     
     products = []
     with open(csv_path, 'r', encoding='utf-8-sig') as f:
@@ -429,7 +430,6 @@ def main():
     print(f"📦 Loaded {len(products)} products from CSV")
     generate_products_json(products)
     
-    # Generate individual product pages
     for product in products:
         try:
             # English page
@@ -439,7 +439,7 @@ def main():
                 f.write(en_html)
             print(f"✅ Generated: {en_path}")
             
-            # Thai page (if Thai content exists)
+            # Thai page
             if product.get('name_th') and product.get('full_description_th'):
                 th_html = generate_product_page(product, lang='th')
                 th_path = th_product_dir / f"{slugify(product['name'])}.html"
