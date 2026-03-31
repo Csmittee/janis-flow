@@ -12,15 +12,13 @@
     <meta property="og:image" content="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png">
     <meta property="og:url" content="https://flow.janishammer.com">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <!-- Anti-flicker: hides page until injector builds correct navbar -->
+    <style id="jh-anti-flicker">body { opacity: 0; }</style>
+
+    <!-- Config MUST load before core (core reads window.BRANDS from config) -->
     <!-- INJECTOR SCRIPTS (FIXED - DO NOT MODIFY) -->
-    <script src="https://assets.janishammer.com/js/injector-core.js"></script>
     <script src="https://assets.janishammer.com/js/injector-config.js"></script>
+    <script src="https://assets.janishammer.com/js/injector-core.js"></script>
     
     <style>
         body {
