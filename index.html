@@ -65,7 +65,9 @@
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2rem 1rem;        /* better default for all screens */
+            width: 100%;               /* ensure full width usage */
+            box-sizing: border-box;
         }
         
         .search-section {
@@ -583,17 +585,42 @@
             cursor: pointer;
         }
         
+       /* ================ MOBILE FIXES ================ */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .hero h2 { font-size: 1.2rem; }
-            .filter-group { flex-direction: column; }
-            .image-stack { grid-template-columns: 1fr; }
-            .product-grid { grid-template-columns: 1fr; }
-            .cart-floating { width: 50px; height: 50px; }
+            .janis-flow-page .container {     /* targets only this page safely */
+                padding: 1rem 0.75rem;
+            }
+            
+            .filter-group {
+                justify-content: center !important;
+                gap: 12px;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            
+            .search-section {
+                padding: 1.25rem 1rem;
+            }
+            
+            .product-grid {
+                gap: 1.25rem;
+                padding: 0 0.5rem;
+            }
+            
+            .product-card {
+                margin: 0 auto;
+                max-width: 100%;
+            }
+            
+            /* Extra safety for any right-shift */
+            .row, .col, section > div {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
         }
     </style>
 </head>
-<body>
+<body class="janis-flow-page">
     <div class="cart-floating" id="cartFloating">
         <i class="fas fa-shopping-bag"></i>
         <span class="cart-count" id="cartCount">0</span>
