@@ -7,10 +7,19 @@
     
     <!-- META TAGS -->
     <meta name="description" content="Premium skateboards, surfskates, and lifestyle gear from Brand X, Toxic, and Outride — quality you can trust">
+    <link rel="canonical" href="https://flow.janishammer.com/">
+    <link rel="alternate" hreflang="en" href="https://flow.janishammer.com/">
+    <link rel="alternate" hreflang="th" href="https://flow.janishammer.com/th/">
+    <link rel="alternate" hreflang="x-default" href="https://flow.janishammer.com/">
     <meta property="og:title" content="Janis Flow">
     <meta property="og:description" content="Premium skateboards, surfskates, and lifestyle gear">
     <meta property="og:image" content="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png">
-    <meta property="og:url" content="https://flow.janishammer.com">
+    <meta property="og:url" content="https://flow.janishammer.com/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Janis Flow">
+    <meta name="twitter:description" content="Premium skateboards, surfskates, and lifestyle gear">
+    <meta name="twitter:image" content="https://res.cloudinary.com/dfiomi0lb/image/upload/v1773772664/Janis-flow-logo.png">
     
     <!-- Anti-flicker: hides page until injector builds correct navbar -->
     <style id="jh-anti-flicker">body { opacity: 0; }</style>
@@ -258,6 +267,7 @@
             color: #33691E;
             margin-bottom: 0.5rem;
         }
+        .product-link { color: inherit; text-decoration: none; }
         
         .product-category {
             display: inline-block;
@@ -776,6 +786,7 @@
             return desc.substring(0, maxLength);
         }
         
+        // Changed: product cards are real links so Google can follow them 2026-10-28
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             if (!grid) return;
@@ -801,13 +812,13 @@
                 const shortDesc = truncateDescription(p.description, 100);
                 const hasMore = p.description && p.description.length > 100;
                 return `
-                <div class="product-card" onclick="location.href='/product/${slugify(p.name)}.html'">
+                <div class="product-card" onclick="location.href='/product/${slugify(p.name)}'">
                     <img src="${p.main_image}" alt="${p.name}" class="product-image">
                     <div class="stock-badge">${p.stock_status || 'In Stock'}</div>
                     <div class="product-info">
                         <div class="product-category">${p.category}</div>
                         <div class="product-brand">${p.brand}</div>
-                        <h3 class="product-name">${p.name}</h3>
+                        <h3 class="product-name"><a class="product-link" href="/product/${slugify(p.name)}">${p.name}</a></h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
                         <div class="product-desc" onclick="event.stopPropagation(); this.classList.add('expanded')">
                             ${shortDesc}

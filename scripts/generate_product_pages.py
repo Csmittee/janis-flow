@@ -3,15 +3,47 @@
 Product Page Generator for Janis Flow
 Compact layout with close button - pages in /product/ folder
 Fixed with anti-flicker and correct script order
+Changed 2026-10-28 (CC_SESSION_flow_seo_v1): extensionless canonical / og:url / hreflang,
+twitter tags, escaped head text, word-safe description cut, sitemap.xml writer
 """
 
 import csv
 import json
 import re
+from html import escape as html_escape
 from pathlib import Path
+
+SITE_URL = 'https://flow.janishammer.com'
 
 def slugify(name):
     return re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
+
+# Changed: head text cleaned (collapse whitespace) and escaped for attributes / <title> 2026-10-28
+def clean_head_text(value):
+    return re.sub(r'\s+', ' ', str(value or '')).strip()
+
+# Changed: description cut never ends in the middle of a word (max 160 chars) 2026-10-28
+def cut_description(value, limit=160):
+    text = clean_head_text(value)
+    if len(text) <= limit:
+        return text
+    window = text[:limit + 1]
+    if ' ' not in window:
+        return text[:limit]
+    return window.rsplit(' ', 1)[0].rstrip()
+
+def page_url(slug, lang):
+    prefix = '/th' if lang == 'th' else ''
+    return f"{SITE_URL}{prefix}/product/{slug}"
+
+# Changed: hreflang en / th / x-default, byte-identical on both pages of a pair 2026-10-28
+def hreflang_tags(en_url, th_url):
+    return (f'<link rel="alternate" hreflang="en" href="{en_url}">\n'
+            f'    <link rel="alternate" hreflang="th" href="{th_url}">\n'
+            f'    <link rel="alternate" hreflang="x-default" href="{en_url}">')
+
+def has_thai_page(product):
+    return bool(product.get('name_th') and product.get('full_description_th'))
 
 def parse_csv_list(value):
     if not value or value == '':
@@ -136,7 +168,7 @@ def generate_product_page(product, lang='en'):
         rec_slug = slugify(rec['name'])
         rec_price = int(float(rec['price'])) if rec.get('price') else 0
         rec_html += f'''
-        <div class="recommend-card" onclick="location.href='{lang_prefix}/product/{rec_slug}.html'">
+        <div class="recommend-card" onclick="location.href='{lang_prefix}/product/{rec_slug}'">
             <img src="{rec.get('main_image', '')}" class="recommend-card-image">
             <div class="recommend-card-info">
                 <div class="recommend-card-name">{rec_name}</div>
@@ -144,18 +176,35 @@ def generate_product_page(product, lang='en'):
             </div>
         </div>'''
     
+    # Head values: clean address (no .html), escaped text, word-safe description
+    slug = slugify(product['name'])
+    canonical_url = page_url(slug, lang)
+    head_name = html_escape(clean_head_text(name))
+    head_description = html_escape(cut_description(description))
+    head_image = html_escape(product['main_image'])
+    if has_thai_page(product):
+        hreflang_html = '\n    ' + hreflang_tags(page_url(slug, 'en'), page_url(slug, 'th'))
+    else:
+        hreflang_html = ''
+
     # FIXED: Added anti-flicker and removed duplicate FA/GFonts (injector loads them)
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>{name} | Janis Flow</title>
-    <meta name="description" content="{description[:150]}">
-    <meta property="og:title" content="{name}">
-    <meta property="og:description" content="{description[:150]}">
-    <meta property="og:image" content="{product['main_image']}">
-    <meta property="og:url" content="https://flow.janishammer.com{lang_prefix}/product/{slugify(product['name'])}.html">
+    <title>{head_name} | Janis Flow</title>
+    <meta name="description" content="{head_description}">
+    <link rel="canonical" href="{canonical_url}">{hreflang_html}
+    <meta property="og:title" content="{head_name}">
+    <meta property="og:description" content="{head_description}">
+    <meta property="og:image" content="{head_image}">
+    <meta property="og:url" content="{canonical_url}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{head_name}">
+    <meta name="twitter:description" content="{head_description}">
+    <meta name="twitter:image" content="{head_image}">
     
     <!-- Anti-flicker: hides page until injector builds correct navbar -->
     <style id="jh-anti-flicker">body {{ opacity: 0; }}</style>
@@ -396,6 +445,35 @@ def generate_products_json(products):
         json.dump(json_data, f, ensure_ascii=False, indent=2)
     print(f"✅ Generated products.json ({len(json_data)} products)")
 
+# Changed: sitemap.xml written from the pages that were generated (SEO-8) 2026-10-28
+def generate_sitemap(pages):
+    """pages: list of (slug, has_th) for every EN page written; has_th = TH page written too"""
+    def url_block(loc, en_url, th_url):
+        lines = ['  <url>', f'    <loc>{loc}</loc>']
+        if th_url:
+            lines += [f'    <xhtml:link rel="alternate" hreflang="en" href="{en_url}"/>',
+                      f'    <xhtml:link rel="alternate" hreflang="th" href="{th_url}"/>',
+                      f'    <xhtml:link rel="alternate" hreflang="x-default" href="{en_url}"/>']
+        lines.append('  </url>')
+        return '\n'.join(lines)
+
+    home_en, home_th = f"{SITE_URL}/", f"{SITE_URL}/th/"
+    blocks = [url_block(home_en, home_en, home_th), url_block(home_th, home_en, home_th)]
+    for slug, has_th in pages:
+        en_url = page_url(slug, 'en')
+        th_url = page_url(slug, 'th') if has_th else ''
+        blocks.append(url_block(en_url, en_url, th_url))
+        if has_th:
+            blocks.append(url_block(th_url, en_url, th_url))
+
+    xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+           'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+           + '\n'.join(blocks) + '\n</urlset>\n')
+    with open(Path(__file__).parent.parent / 'sitemap.xml', 'w', encoding='utf-8') as f:
+        f.write(xml)
+    print(f"✅ Generated sitemap.xml ({len(blocks)} URLs)")
+
 def main():
     csv_path = Path(__file__).parent.parent / 'products.csv'
     
@@ -430,25 +508,33 @@ def main():
     print(f"📦 Loaded {len(products)} products from CSV")
     generate_products_json(products)
     
+    sitemap_pages = []
     for product in products:
+        en_written = False
+        th_written = False
         try:
             # English page
             en_html = generate_product_page(product, lang='en')
             en_path = product_dir / f"{slugify(product['name'])}.html"
             with open(en_path, 'w', encoding='utf-8') as f:
                 f.write(en_html)
+            en_written = True
             print(f"✅ Generated: {en_path}")
             
             # Thai page
-            if product.get('name_th') and product.get('full_description_th'):
+            if has_thai_page(product):
                 th_html = generate_product_page(product, lang='th')
                 th_path = th_product_dir / f"{slugify(product['name'])}.html"
                 with open(th_path, 'w', encoding='utf-8') as f:
                     f.write(th_html)
+                th_written = True
                 print(f"✅ Generated: {th_path}")
         except Exception as e:
             print(f"❌ Error generating {product.get('name', 'unknown')}: {e}")
+        if en_written:
+            sitemap_pages.append((slugify(product['name']), th_written))
     
+    generate_sitemap(sitemap_pages)
     print("\n🎉 All product pages generated successfully!")
 
 if __name__ == '__main__':

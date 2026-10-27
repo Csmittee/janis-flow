@@ -36,10 +36,25 @@ jobs:
         run: |
           python scripts/generate_product_pages.py
       
+      # Changed 2026-10-28: no CI-skip marker in the message (Cloudflare Pages must deploy this commit); sitemap.xml staged; DEP-6 retry loop
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add product/ th/product/ products.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-generate product pages from CSV [skip ci]"
-          git push
+          git add product/ th/product/ products.json sitemap.xml
+          if git diff --staged --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "Auto-generate product pages and sitemap from CSV"
+          for attempt in 1 2 3; do
+            if git pull --rebase --autostash origin main && git push origin HEAD:main; then
+              echo "Pushed on attempt $attempt."
+              exit 0
+            fi
+            echo "Push attempt $attempt failed; retrying."
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 5))
+          done
+          echo "::error::Could not push generated pages after 3 attempts."
+          exit 1
