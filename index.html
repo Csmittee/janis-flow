@@ -786,7 +786,7 @@
             return desc.substring(0, maxLength);
         }
         
-        // Changed: product cards are real links so Google can follow them 2026-10-28
+        // Changed: product cards are real links; addresses and image sources set from JavaScript, no template text in the page source 2026-11-10
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             if (!grid) return;
@@ -812,13 +812,13 @@
                 const shortDesc = truncateDescription(p.description, 100);
                 const hasMore = p.description && p.description.length > 100;
                 return `
-                <div class="product-card" onclick="location.href='/product/${slugify(p.name)}'">
-                    <img src="${p.main_image}" alt="${p.name}" class="product-image">
+                <div class="product-card" data-slug="${slugify(p.name)}">
+                    <img data-img="${p.main_image}" alt="${p.name}" class="product-image">
                     <div class="stock-badge">${p.stock_status || 'In Stock'}</div>
                     <div class="product-info">
                         <div class="product-category">${p.category}</div>
                         <div class="product-brand">${p.brand}</div>
-                        <h3 class="product-name"><a class="product-link" href="/product/${slugify(p.name)}">${p.name}</a></h3>
+                        <h3 class="product-name"><a class="product-link">${p.name}</a></h3>
                         <div class="product-price">${p.price.toLocaleString()}</div>
                         <div class="product-desc" onclick="event.stopPropagation(); this.classList.add('expanded')">
                             ${shortDesc}
@@ -828,6 +828,20 @@
                     </div>
                 </div>
             `}).join('');
+            grid.querySelectorAll('.product-card').forEach(card => {
+                const img = card.querySelector('img[data-img]');
+                if (img) img.src = img.dataset.img;
+                const a = card.querySelector('a.product-link');
+                if (a) a.href = '/product/' + card.dataset.slug;
+            });
+            if (!grid.dataset.linksWired) {
+                grid.dataset.linksWired = '1';
+                grid.addEventListener('click', e => {
+                    if (e.target.closest('a')) return;
+                    const card = e.target.closest('.product-card');
+                    if (card) location.href = '/product/' + card.dataset.slug;
+                });
+            }
         }
         
         async function loadProducts() {
