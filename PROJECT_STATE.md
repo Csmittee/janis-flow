@@ -1,7 +1,7 @@
 # PROJECT_STATE.md — janis-flow
-> Version 1.1 — 2026-10-28
-> Changes: Flow SEO status (CC_SESSION_flow_seo_v1): canonical, hreflang, og/twitter, sitemap.xml, robots.txt, real card links, workflow commit step; SEO baseline; open issues updated
-> Previous: Version 1.0 — 2026-06-25 (Initial creation — bootstrap scan)
+> Version 1.2 — 2026-11-10
+> Changes: CC_SESSION_template_link_cleanup_v1 — home card links no longer written as template text (status line, open-issues line counts, session log row)
+> Previous: Version 1.1 — 2026-10-28 (Flow SEO status (CC_SESSION_flow_seo_v1): canonical, hreflang, og/twitter, sitemap.xml, robots.txt, real card links, workflow commit step; SEO baseline; open issues updated). Earlier: Version 1.0 — 2026-06-25 (Initial creation — bootstrap scan)
 
 ## Status: LIVE
 ## Domain: https://flow.janishammer.com
@@ -24,6 +24,11 @@
   Search Console: PARTIAL — Search Console sitemap + request indexing (owner task)
   NOT VERIFIED LIVE — owner QA steps 1–10 (janis-flow PR / janishammer-central PR).
 
+## Home card links — 2026-11-10 (CC_SESSION_template_link_cleanup_v1, janis-flow#3):
+  index.html + th/index.html renderProducts(): no `${...}` address text in the page source (data-slug on the card; name-anchor href and card image src set from JavaScript; one click listener on the grid) — DONE (pending owner QA)
+  Why: Search Console 2026-11-10 listed https://flow.janishammer.com/product/${slugify(p.name)} and /th/product/${slugify(p.name)} ("Alternate page with proper canonical tag") — Google read the script text as a link.
+  NOT VERIFIED LIVE — owner QA steps 1–5 (janis-flow#3).
+
 ## SEO baseline (SEO-10):
   owner-reported 2026-10-28: home page indexed, product page /product/darren-menditto-natty unknown to Google, no sitemap.
   Impressions / clicks (90 days): not recorded. Last audit: not recorded.
@@ -38,7 +43,8 @@
   No issues found. All Airtable credentials in GitHub Secrets.
 
 ## Open issues observed:
-  - index.html 991 lines / th/index.html 992 lines (measured 2026-10-28) — OVER 800 limit (HTML-1); edited 2026-10-28 under owner approval, no split; split plan proposed in CC_CHAT_LOG
+  - index.html 1005 lines / th/index.html 1006 lines (measured 2026-11-10; 991 / 992 on 2026-10-28) — OVER 800 limit (HTML-1); edited 2026-10-28 and 2026-11-10 under owner approval, no split; split plan proposed in CC_CHAT_LOG
+  - CLAUDE.md still says 991L / 992L for these two files (not in the 2026-11-10 order's file list) — Chat to refresh the counts in a later order
   - SEO DEBT — Product schema missing on product pages (SEO-3); LocalBusiness missing on home (SEO-3)
   - SEO-4 lengths (owner copy, not padded): product titles 18–47 chars (all 54 under 50); EN descriptions 145–160 (all in range); TH descriptions 74–160 (10 under 140 — Thai text has few spaces, word-safe cut stops earlier)
   - OG image is brand logo on home — not branded SEO_OG image
@@ -47,6 +53,9 @@
   - Fixed 2026-10-28 (pending owner QA): og:type, twitter cards, canonical — see SEO status
 
 ## Session log (newest first):
+### 2026-11-10 — CC_SESSION_template_link_cleanup_v1
+index.html + th/index.html: renderProducts() writes no address text; card carries data-slug, name anchor href and image src are set from JavaScript, one click listener opens the product page. Product pages, generator, workflow, head, sitemap untouched. janis-flow#3 — DONE (pending owner QA) — NOT VERIFIED LIVE.
+
 ### 2026-10-28 — CC_SESSION_flow_seo_v1
 Generator: extensionless canonical/og:url, hreflang x3, og:type, twitter tags, escaped head text, word-safe description cut (≤160), recommended-card links extensionless, sitemap.xml writer. Workflow commit step: no CI-skip marker, sitemap staged, retry loop. Home pair: canonical, hreflang, og:url/og:type, twitter tags, real product links. robots.txt new. 54 product pages regenerated (27 EN + 27 TH); sitemap 56 URLs. DONE (pending owner QA).
 

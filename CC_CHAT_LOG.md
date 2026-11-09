@@ -1,8 +1,20 @@
 # CC_CHAT_LOG.md — janis-flow
-> Version 1.1 — 2026-10-28
-> Changes: CC_SESSION_flow_seo_v1 entry added
-> Previous: Version 1.0 — 2026-06-25 (Initial creation — first entry)
+> Version 1.2 — 2026-11-10
+> Changes: CC_SESSION_template_link_cleanup_v1 entry added
+> Previous: Version 1.1 — 2026-10-28 (CC_SESSION_flow_seo_v1 entry added). Earlier: Version 1.0 — 2026-06-25 (Initial creation — first entry)
 
+---
+
+## 2026-11-10 — CC_SESSION_template_link_cleanup_v1
+**Did:** index.html and th/index.html, renderProducts() only: cards carry data-slug; name-anchor href and card image src are set from JavaScript after render; one click listener on the grid opens the product page (no `${...}` in href, src, onclick or location.href; 0 matches for `/product/${`, `/th/product/${`). Page-run check in headless Chromium on the real files: 27 cards, clean extensionless hrefs, card and name click open the same address. Diffstat 22 lines per file. PROJECT_STATE, this log. Product pages, generator, workflow, head, sitemap, robots untouched.
+**Updated:** NONE (no rule file in this repo)
+**New files:** NONE
+**Pending Chat verify:** owner QA steps 1–5 (janis-flow#3, Block A) after the merge and the Cloudflare redeploy; the next Search Console export should drop the two `${slugify(p.name)}` addresses; CLAUDE.md still says 991L / 992L (now 1005 / 1006 measured) — outside this order's file list.
+**Flags:** WF-3 EXCEPTION — one identical fault across two repos (Flow + Daje, one order). HTML-1 — files over 800 lines edited without a split, owner approved 2026-11-10 (index.html 991→1005, th/index.html 992→1006). NOT VERIFIED LIVE — owner QA steps 1–5. NO injector change; worker contract unchanged (DEP-7 not triggered); no workflow runs on these files (product_build.yml paths: products.csv, generator). Generated product pages hold `${` only in their cart script (not product addresses) — DEP-2, not touched.
+**Next steps:** none for Flow; Chat reads the next Search Console export.
+**Previous PR QA:** janis-flow#2 PASS (ledger, flow#2 + central#22: steps 1–10 PASS + ALL DONE); janishammer-central#38 PASS (Section 0 of this order, per Chat).
+**Owner QA:** janis-flow#3 PENDING (steps 1–5)
+**QA CLOSE-OUT:** Section 0 states are recorded in janishammer-central (ledger, log); nothing for Flow.
 ---
 
 ## 2026-10-28 — CC_SESSION_flow_seo_v1
