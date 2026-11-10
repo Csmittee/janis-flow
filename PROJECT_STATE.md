@@ -1,7 +1,7 @@
 # PROJECT_STATE.md — janis-flow
-> Version 1.2 — 2026-11-10
-> Changes: CC_SESSION_template_link_cleanup_v1 — home card links no longer written as template text (status line, open-issues line counts, session log row)
-> Previous: Version 1.1 — 2026-10-28 (Flow SEO status (CC_SESSION_flow_seo_v1): canonical, hreflang, og/twitter, sitemap.xml, robots.txt, real card links, workflow commit step; SEO baseline; open issues updated). Earlier: Version 1.0 — 2026-06-25 (Initial creation — bootstrap scan)
+> Version 1.3 — 2026-11-10
+> Changes: CC_SESSION_template_link_cleanup_v1 — owner QA passed (status words)
+> Previous: Version 1.2 — 2026-11-10 (CC_SESSION_template_link_cleanup_v1 — home card links no longer written as template text (status line, open-issues line counts, session log row)). Earlier: Version 1.1 — 2026-10-28 (Flow SEO status (CC_SESSION_flow_seo_v1): canonical, hreflang, og/twitter, sitemap.xml, robots.txt, real card links, workflow commit step; SEO baseline; open issues updated). Earlier: Version 1.0 — 2026-06-25 (Initial creation — bootstrap scan)
 
 ## Status: LIVE
 ## Domain: https://flow.janishammer.com
@@ -25,9 +25,9 @@
   NOT VERIFIED LIVE — owner QA steps 1–10 (janis-flow PR / janishammer-central PR).
 
 ## Home card links — 2026-11-10 (CC_SESSION_template_link_cleanup_v1, janis-flow#3):
-  index.html + th/index.html renderProducts(): no `${...}` address text in the page source (data-slug on the card; name-anchor href and card image src set from JavaScript; one click listener on the grid) — DONE (pending owner QA)
+  index.html + th/index.html renderProducts(): no `${...}` address text in the page source (data-slug on the card; name-anchor href and card image src set from JavaScript; one click listener on the grid) — DONE (verified live 2026-11-10 — owner QA passed, per owner)
   Why: Search Console 2026-11-10 listed https://flow.janishammer.com/product/${slugify(p.name)} and /th/product/${slugify(p.name)} ("Alternate page with proper canonical tag") — Google read the script text as a link.
-  NOT VERIFIED LIVE — owner QA steps 1–5 (janis-flow#3).
+  owner QA steps 1–5 PASS (owner in chat 2026-11-10: step 5 first failed on a screenshot of an old cached build; Chat found the stale build and asked the owner to tick step 5 OK; the owner reported the QA closed) (janis-flow#3).
 
 ## SEO baseline (SEO-10):
   owner-reported 2026-10-28: home page indexed, product page /product/darren-menditto-natty unknown to Google, no sitemap.
@@ -54,7 +54,7 @@
 
 ## Session log (newest first):
 ### 2026-11-10 — CC_SESSION_template_link_cleanup_v1
-index.html + th/index.html: renderProducts() writes no address text; card carries data-slug, name anchor href and image src are set from JavaScript, one click listener opens the product page. Product pages, generator, workflow, head, sitemap untouched. janis-flow#3 — DONE (pending owner QA) — NOT VERIFIED LIVE.
+index.html + th/index.html: renderProducts() writes no address text; card carries data-slug, name anchor href and image src are set from JavaScript, one click listener opens the product page. Product pages, generator, workflow, head, sitemap untouched. janis-flow#3 — DONE (verified live 2026-11-10 — owner QA passed, per owner).
 
 ### 2026-10-28 — CC_SESSION_flow_seo_v1
 Generator: extensionless canonical/og:url, hreflang x3, og:type, twitter tags, escaped head text, word-safe description cut (≤160), recommended-card links extensionless, sitemap.xml writer. Workflow commit step: no CI-skip marker, sitemap staged, retry loop. Home pair: canonical, hreflang, og:url/og:type, twitter tags, real product links. robots.txt new. 54 product pages regenerated (27 EN + 27 TH); sitemap 56 URLs. DONE (pending owner QA).
